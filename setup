@@ -1,0 +1,43 @@
+class User < ActiveRecord::Base
+
+  has_many :transactions
+  has_many :credits, :foreign_key => 'borrower_id', :class_name => 'Transaction'
+  has_many :debits, :foreign_key => 'lender_id', :class_name => 'Transaction'
+  has_many :notes, through: transactions
+
+
+end
+
+
+
+class Transaction < ActiveRecord::Base
+
+  belongs_to :lender, :class_name => 'User'
+  belongs_to :borrower, :class_name => 'User'
+  has_many :notes
+
+end
+
+
+
+class Note < ActiveRecord::Base
+
+  belongs_to :transaction
+
+end
+
+
+## schema
+
+User
+  name
+  balance
+
+transaction 
+  lender_id
+  borrower_id
+  amount
+
+Note
+  comment
+  transaction_id
