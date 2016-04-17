@@ -1,0 +1,10 @@
+<h1>Hi <%= @user.name %></h1>
+
+
+<table>
+  <tr>
+    <td>This is your balance: <%= @user.balance %></td>
+    <td><%= link_to 'Edit', edit_balance_path(@user) %></td>
+
+  </tr>
+<table>

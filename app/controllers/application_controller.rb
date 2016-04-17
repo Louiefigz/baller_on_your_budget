@@ -13,5 +13,12 @@ class ApplicationController < ActionController::Base
       end
 
 
+      def logged_in?
+        if !user_signed_in?
+          redirect_to '/users/sign_in'
+        end
+      end
+
+
 
 end

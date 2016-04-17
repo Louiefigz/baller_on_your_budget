@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   devise_for :users
   resources :users
 
+  get '/users/:id/edit_balance', to: 'users#edit_balance', as:'edit_balance'
+  post '/users/:id/edit_balance', to: 'users#update_balance',  as:'update_balance'
 
   root 'profiles#home'
   # The priority is based upon order of creation: first created -> highest priority.

@@ -1,0 +1,12 @@
+
+<h1>It must be pay day!!! </h1>
+
+
+
+
+<%= form_tag @user, url: update_balance_path do  %>
+  <h4>How much did you make? </h4>
+  $<%= number_field_tag :balance  %>
+
+  <%=submit_tag "Make Me Richer" %>
+<% end %>

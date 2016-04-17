@@ -1,4 +1,5 @@
 class NotesController < ApplicationController
+  before_action :logged_in?
   def new
   end
 

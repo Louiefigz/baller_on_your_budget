@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show]
+  before_action :logged_in?
+  before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance]
 
   def new
   end
@@ -8,6 +9,15 @@ class UsersController < ApplicationController
   end
 
   def edit
+  end
+
+  def edit_balance
+  
+
+  end
+
+  def update_balance
+    binding.pry
   end
 
   def update

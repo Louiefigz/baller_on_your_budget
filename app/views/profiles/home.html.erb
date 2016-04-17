@@ -1,0 +1,18 @@
+
+<h1>This is your profile <%= current_user.name %></h1>
+
+
+<h3>Which one of your friends do you want to borrow money from?</h3>
+<div>
+  <ul>
+  <% @users.each do |user| %>
+    <li><%= link_to user.name, user_path(user) %></li>
+  <% end %>
+  </ul>
+</div>
+
+
+<!-- <%= form_for @users do |f| %>
+<%= f.collection_select :user_id, User.all, :id,:name, include_blank: true %>
+  <% f.submit %>
+<% end %> -->
