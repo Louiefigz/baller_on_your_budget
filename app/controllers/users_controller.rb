@@ -12,12 +12,14 @@ class UsersController < ApplicationController
   end
 
   def edit_balance
-  
+
 
   end
 
   def update_balance
-    binding.pry
+    
+    @user.update(balance: @user.add_money(params[:balance].to_i))
+    redirect_to user_path(@user)
   end
 
   def update

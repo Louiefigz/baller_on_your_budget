@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   has_many :notes, through: :transactions
 
 
-
+  def add_money(money)
+    self.balance + money
+  end
 
 end

@@ -1,10 +1,72 @@
-<h1>Hi <%= @user.name %></h1>
+
+<% if current_user != @user %>
+  <h1>Hey <%= current_user.name%>! You only visit when you need money</h1>
+<% else %>
+  <h1>Hi <%= @user.name %></h1>
+  <h3> This is sort of your profile page</h3>
+<% end %>
 
 
 <table>
   <tr>
-    <td>This is your balance: <%= @user.balance %></td>
-    <td><%= link_to 'Edit', edit_balance_path(@user) %></td>
-
+    <% if current_user != @user %>
+      <td>This is <%= @user.name %>'s balance. (Do you really need the money that bad?): <h3>$<%= @user.balance %></h3></td>
+    <% else %>
+      <td>This is your balance: <%= @user.balance %></td>
+      <td><%= link_to 'Edit', edit_balance_path(@user) %></td>
+    <% end %>
   </tr>
 <table>
+
+
+<% if current_user != @user %>
+<div>
+  <%= form_tag ('/transactions') do  %>
+    <h4>How much are you taking from poor <%= @user.name%>?</h4>
+    $<%= number_field_tag :amount %>
+    <%= hidden_field_tag 'user_id', @user.id %>
+    <%= submit_tag "Your friend is so generous" %>
+    <% end %>
+</div>
+<% end %>
+
+
+<h3>These are all of the people that may want to run away from</h3>
+<div>
+    <ul>
+  <% @user.borrowed.each do |person| %>
+      <% @lender=  User.find(person.lender_id) %>
+      <% if person.amount > 0 %>
+      <li><%=link_to @lender.name, user_path(person) %> - $<%= person.amount%></li>
+    <% end %>
+  <% end  %>
+  </ul>
+</div>
+<% binding.pry %>
+<h3>These are all of the people that you need to hunt</h3>
+<div>
+    <ul>
+  <% @user.lent_out.each do |person| %>
+      <% @borrower=  User.find(person.borrower_id) %>
+      <%binding.pry%>
+      <% if person.amount != nil || person.amount > 0 %>
+      <li><%=link_to @borrower.name, user_path(person) %> - $<%= person.amount%></li>
+    <% end %>
+  <% end  %>
+  </ul>
+</div>
+
+
+
+
+
+<!--
+<div>
+  <h4>Borrow money from this person although you probably dont need it </h4>
+  <%= button_to "Get $", transactions_path, params: {'user_id' => @user.id } %><br><br>
+</div>
+
+These are the people you owe money<br>
+
+
+these are the fuckers need to pay you back<br> -->

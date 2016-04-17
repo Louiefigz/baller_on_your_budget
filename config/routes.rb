@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   devise_for :users
   resources :users
 
+  resources :transactions, only: [:create, :new]
+  
+
   get '/users/:id/edit_balance', to: 'users#edit_balance', as:'edit_balance'
   post '/users/:id/edit_balance', to: 'users#update_balance',  as:'update_balance'
 
