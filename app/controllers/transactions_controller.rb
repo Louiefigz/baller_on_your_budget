@@ -1,18 +1,24 @@
 class TransactionsController < ApplicationController
   before_action :logged_in?
+
   def new
 
   end
 
   def create
-    @transaction = Transaction.create(lender_id: params[:user_id].to_i, borrower_id: current_user.id, amount: params[:amount].to_i)
-    @lender = User.find(@transaction.lender_id)
-    @borrower = User.find(@transaction.borrower_id)
-    @lender.update(balance: @lender.balance - @transaction.amount)
-    @borrower.update(balance: @borrower.balance + @transaction.amount)
+    @transaction = Transaction.new(trans_params)
+    # @transaction.update(borrower_id: current_user.id)
+    @transaction.borrower_id = current_user.id
+    if @transaction.save
+      @transaction.lender.update(balance: @transaction.lender.balance - @transaction.amount)
+      @transaction.borrower.update(balance: @transaction.borrower.balance + @transaction.amount)
 
-    redirect_to user_path(@borrower), flash[:notice] => "Well it seems like she isn't eating for a few weeks"
-
+      redirect_to user_path(current_user), flash[:notice] => "Well it seems like she isn't eating for a few weeks"
+    else
+      # raise
+      flash[:message] = "He didn't have enough money or something"
+      redirect_to user_path(current_user.id)
+    end
   end
 
   def edit
@@ -23,4 +29,10 @@ class TransactionsController < ApplicationController
 
   def destroy
   end
+
+  private
+
+    def trans_params
+      params.require(:transaction).permit(:amount, :lender_id)
+    end
 end

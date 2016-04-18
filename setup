@@ -33,7 +33,7 @@ User
   name
   balance
 
-transaction 
+transaction
   lender_id
   borrower_id
   amount
@@ -41,3 +41,35 @@ transaction
 Note
   comment
   transaction_id
+
+
+
+
+
+  I want to add the previous amount of money owed to the current amount.
+  find all of the id's that are the same.  Add those quantities together and return that number.
+
+  debt_logs
+    transaction_id
+    amount_due
+
+
+
+    <!--
+    <% if !@user.borrowed.empty? %>
+    <h3>These are all of the people that may want to run away from</h3>
+    <div>
+        <ul>
+          @user.borrowed.group_by(:lender_id).each do |trans|
+            trans.sum(:amount)
+          end
+
+          <%binding.pry%>
+          <%= @user.borrowed.each do |transaction|%>
+            if current_user.lender_ids.include?(transaction.lender_id)
+              transaction.amount
+              <li><%=link_to person.name, user_path(person) %></li>
+          <% end  %>
+        </ul>
+    </div>
+    <% end %> -->

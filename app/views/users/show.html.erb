@@ -16,57 +16,44 @@
       <td><%= link_to 'Edit', edit_balance_path(@user) %></td>
     <% end %>
   </tr>
-<table>
+</table>
 
 
 <% if current_user != @user %>
-<div>
-  <%= form_tag ('/transactions') do  %>
+
+  <%= form_for @transaction, remote: true, data: { no_turbolink: true } do |f| %>
     <h4>How much are you taking from poor <%= @user.name%>?</h4>
-    $<%= number_field_tag :amount %>
-    <%= hidden_field_tag 'user_id', @user.id %>
-    <%= submit_tag "Your friend is so generous" %>
-    <% end %>
-</div>
+    $<%= f.text_field :amount %>
+    <%= f.hidden_field :lender_id, value: @user.id %>
+    <%= f.submit "Your friend is so generous" %>
+
+  <% end %>
 <% end %>
 
 
-<h3>These are all of the people that may want to run away from</h3>
+
+
 <div>
+
+  <% if current_user != @user%>
+    <h4><%= "#{@user.name} borrowed from #{@user.borrowed.pluck(:lender_id).uniq.count} this many people" %></h4>
+  <% else  %>
     <ul>
-  <% @user.borrowed.each do |person| %>
-      <% @lender=  User.find(person.lender_id) %>
-      <% if person.amount > 0 %>
-      <li><%=link_to @lender.name, user_path(person) %> - $<%= person.amount%></li>
-    <% end %>
-  <% end  %>
-  </ul>
+      <h4>These are the people you owe.</h4>
+      <% @user.unique_lenders.each do |lender| %>
+        <li><%=link_to lender.name, user_path(lender) %> - $<%= @user.total_borrowed_from(lender.id)%></li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>
-<% binding.pry %>
+
+<% if !@user.lent_out.empty? %>
 <h3>These are all of the people that you need to hunt</h3>
 <div>
     <ul>
-  <% @user.lent_out.each do |person| %>
-      <% @borrower=  User.find(person.borrower_id) %>
-      <%binding.pry%>
-      <% if person.amount != nil || person.amount > 0 %>
-      <li><%=link_to @borrower.name, user_path(person) %> - $<%= person.amount%></li>
-    <% end %>
+  <% @user.unique_borrowers.each do |borrower| %>
+      <li><%=link_to borrower.name, user_path(borrower) %> - $<%= @user.total_lended(borrower.id)%></li>
   <% end  %>
   </ul>
 </div>
-
-
-
-
-
-<!--
-<div>
-  <h4>Borrow money from this person although you probably dont need it </h4>
-  <%= button_to "Get $", transactions_path, params: {'user_id' => @user.id } %><br><br>
-</div>
-
-These are the people you owe money<br>
-
-
-these are the fuckers need to pay you back<br> -->
+<% end %>

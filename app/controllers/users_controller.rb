@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   end
 
   def update_balance
-    
+
     @user.update(balance: @user.add_money(params[:balance].to_i))
     redirect_to user_path(@user)
   end
@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   end
 
   def show
-
+    @transaction = Transaction.new
   end
 
   def destroy
