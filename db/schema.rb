@@ -11,7 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160416153352) do
+ActiveRecord::Schema.define(version: 20160420023738) do
+
+  create_table "credits", force: :cascade do |t|
+    t.integer  "amount",      default: 0
+    t.integer  "borrower_id"
+    t.integer  "lender_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  create_table "debits", force: :cascade do |t|
+    t.integer  "amount",      default: 0
+    t.integer  "borrower_id"
+    t.integer  "lender_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "notes", force: :cascade do |t|
     t.string   "comment"
@@ -24,13 +40,14 @@ ActiveRecord::Schema.define(version: 20160416153352) do
     t.integer  "lender_id"
     t.integer  "borrower_id"
     t.integer  "amount"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.boolean  "lending",     default: true
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
-    t.integer  "balance"
+    t.integer  "balance",                default: 0
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "email",                  default: "", null: false
@@ -43,6 +60,8 @@ ActiveRecord::Schema.define(version: 20160416153352) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "provider"
+    t.string   "uid"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

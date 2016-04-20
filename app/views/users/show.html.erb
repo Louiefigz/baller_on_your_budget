@@ -21,39 +21,71 @@
 
 <% if current_user != @user %>
 
-  <%= form_for @transaction, remote: true, data: { no_turbolink: true } do |f| %>
-    <h4>How much are you taking from poor <%= @user.name%>?</h4>
+  <%= form_for @transaction do |f| %>
+    <h4>How much are you taking from poor <%= @user.name%>?
+      <%if current_user.total_amount_due(current_user, @user) > 0 %>
+      You already owe $<%= current_user.total_amount_due(current_user, @user) %><% end %></h4>
+
+    <%if current_user.total_amount_due(current_user, @user) > 0%>
+    <h4></h4>
+    <% end %>
     $<%= f.text_field :amount %>
     <%= f.hidden_field :lender_id, value: @user.id %>
     <%= f.submit "Your friend is so generous" %>
+  <% end %><br>
 
+
+  <% if @user.total_amount_due(current_user, @user) > 0 %>
+    <h4>Repay what you owe. <%= @user.name %> kind of needs it.</h4>
+    <%= form_for @transaction do |f| %>
+      $<%= f.text_field :amount %>
+      <%= f.hidden_field :lender_id, value: @user.id %>
+      <%= f.hidden_field :lending, value: false %>
+      <%= f.submit "Your doing the right thing" %>
+      <% end %>
   <% end %>
 <% end %>
 
-
-
-
+<%if current_user != @user %>
 <div>
-
-  <% if current_user != @user%>
-    <h4><%= "#{@user.name} borrowed from #{@user.borrowed.pluck(:lender_id).uniq.count} this many people" %></h4>
-  <% else  %>
+  <% if !@user.overpaid_lender(current_user).empty?%>
+  <h2>Actually <%=@user.name%> owes you $<%= @user.total_amount_due(current_user, @user).abs%>. Maybe you overpaid</h2>
+    <h4>Seems like you overpaid</h4>
     <ul>
-      <h4>These are the people you owe.</h4>
-      <% @user.unique_lenders.each do |lender| %>
-        <li><%=link_to lender.name, user_path(lender) %> - $<%= @user.total_borrowed_from(lender.id)%></li>
-      <% end %>
+      <% @user.overpaid_lender(current_user).each do |lender| %>
+      <li><%=link_to lender.name, user_path(lender)%> - $<%= @user.total_amount_due(current_user, lender).abs%></li>
+    <% end %>
+  <% end %>
+  </ul>
+</div>
+<% end %>
+
+<% if current_user != @user%>
+<div>
+    <h4><%= "#{@user.name} borrowed from #{@user.borrowed.pluck(:lender_id).uniq.count} people" %></h4>
+    <% else  %>
+      <% if !@user.lender_amount_not_zero(current_user).empty? %>
+        <h4>These are the people you owe.</h4>
+          <ul>
+            <% @user.lender_amount_not_zero(current_user).each do |lender| %>
+            <% if !@user.overpaid_lender(current_user).include?(lender)%>
+            <li><%=link_to lender.name, user_path(lender) %> - $<%= @user.total_amount_due(current_user, lender) %></li>
+            <% end %>
+          <% end %>
+          </ul>
+    <% end %>
+</div>
+<% end %>
+
+<% if current_user == @user %>
+<div>
+  <% if !@user.borrower_amount_not_zero(current_user).empty? %>
+    <h3>These are all of the people that you need to hunt</h3>
+    <ul>
+        <% @user.borrower_amount_not_zero(current_user).each do |borrower| %>
+        <li><%=link_to borrower.name, user_path(borrower) %> - $<%= @user.borrower_total_amount_due(current_user, borrower) %></li>
+      <% end  %>
     </ul>
   <% end %>
-</div>
-
-<% if !@user.lent_out.empty? %>
-<h3>These are all of the people that you need to hunt</h3>
-<div>
-    <ul>
-  <% @user.unique_borrowers.each do |borrower| %>
-      <li><%=link_to borrower.name, user_path(borrower) %> - $<%= @user.total_lended(borrower.id)%></li>
-  <% end  %>
-  </ul>
 </div>
 <% end %>

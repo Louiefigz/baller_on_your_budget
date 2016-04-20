@@ -73,3 +73,13 @@ Note
         </ul>
     </div>
     <% end %> -->
+
+    remote: true, data: { no_turbolink: true }
+
+
+
+    <% @user.unique_lenders.each do |lender| %>
+      <% if @user.total_amount_due(current_user, lender) != 0%>
+        <li><%=link_to lender.name, user_path(lender) %> - $<%= @user.total_amount_due(current_user, lender) %></li>
+      <% end %>
+    <% end %>

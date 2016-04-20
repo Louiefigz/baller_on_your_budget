@@ -37,5 +37,11 @@ User.create(
   email: "aaron@gmail.com",
   balance: "1000",
   password: "12345678",
-  
+)
+
+User.create(
+  name: "cori",
+  email: "cori@gmail.com",
+  balance: "",
+  password: "12345678",
 )
