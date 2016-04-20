@@ -42,6 +42,7 @@ group :development, :test do
   gem "better_errors"
   gem 'omniauth'
   gem 'omniauth-facebook'
+  gem "omniauth-google-oauth2" 
 end
 
 group :development do
