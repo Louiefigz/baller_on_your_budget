@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2]
+         :omniauthable, :omniauth_providers => [:google_oauth2, :facebook]
 
   has_many :borrowed, :foreign_key => 'borrower_id', :class_name => 'Transaction'
   has_many :lent_out, :foreign_key => 'lender_id', :class_name => 'Transaction'
@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  
+
 
 
   def add_money(money)
