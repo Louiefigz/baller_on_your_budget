@@ -37,11 +37,10 @@ class UsersController < ApplicationController
   end
 
   def update_friends
-    binding.pry
+
   end
 
   def update
-    binding.pry
     @user = User.find(params[:id])
     @user.update(user_params)
   end

@@ -3,20 +3,14 @@
 
 
 <h3>Which one of your friends do you want to borrow money from?</h3>
-<div>
-  <ul>
-  <% @users.each do |user| %>
-    <%if current_user != user%>
-    <li><%= link_to user.name, user_path(user), data: {:"no-turbolinks" => true} %></li>
-  <% end %>
-  <% end %>
-  </ul>
-</div>
 
-<h1>All the friends </h1>
 
 <ul>
 <% current_user.friends.each do |friend| %>
   <li><%= link_to friend.name, user_path(friend) %></li>
 <% end %>
 </ul>
+
+
+<h3> Add your friends here</h3>
+  <%= link_to "Add Friends", add_friends_path(:id=>current_user.id) %>
