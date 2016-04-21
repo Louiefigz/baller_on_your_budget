@@ -18,6 +18,12 @@
   </tr>
 </table>
 
+<% if current_user == @user %>
+
+  <%= link_to "Add Friends", add_friends_path %>
+
+<% end %>
+
 
 <% if current_user != @user %>
 

@@ -1,0 +1,11 @@
+
+
+<h2>Adding new friends</h2>
+
+<%= form_for @user do |f| %>
+
+  <%= f.fields_for :friends_attributes do |u| %>
+  <%= u.collection_check_boxes :friend_ids, User.all, :id, :name %>
+  <%= u.submit %>
+<% end %>
+<% end %>

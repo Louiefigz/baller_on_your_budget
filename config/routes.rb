@@ -8,10 +8,15 @@ Rails.application.routes.draw do
 
 
   resources :transactions, only: [:create, :new]
+  resources :friendships, only: [:create, :new]
 
 
   get '/users/:id/edit_balance', to: 'users#edit_balance', as:'edit_balance'
   post '/users/:id/edit_balance', to: 'users#update_balance',  as:'update_balance'
+
+  get '/users/:id/add_friends', to: 'users#add_friends', as:'add_friends'
+  post '/users/:id/add_friends', to: 'users#update_friends', as:'update_friends'
+
 
   root 'profiles#home'
   # The priority is based upon order of creation: first created -> highest priority.

@@ -14,9 +14,31 @@ class User < ActiveRecord::Base
   has_many :credits, foreign_key: 'lender_id'
   has_many :credits, foreign_key: 'borrower_id'
 
+  has_many :friendships
+  has_many :friends, :through => :friendships
+
+
+
   has_many :notes, through: :transactions
 
+  accepts_nested_attributes_for :friends
 
+  def friends_attributes=(attributes)
+
+  attributes["friend_ids"].each do |attribute|
+    if attribute != ""
+     friend = User.find_or_create_by(id: attribute)
+        if !self.friends.include?(friend)
+          self.friends << friend
+        end
+      end
+   end
+   self.save
+  end
+
+  def friends_attributes
+    self.friends.uniq
+  end
 
 
   def self.from_omniauth(auth)
