@@ -48,34 +48,62 @@
 
 <%if current_user != @user %>
 <div>
-  <% if !@user.overpaid_lender(current_user).empty?%>
+  <% if @user.display_overpaid_amount(current_user, @user) %>
   <h2>Actually <%=@user.name%> owes you $<%= @user.total_amount_due(current_user, @user).abs%>. Maybe you overpaid</h2>
+  <% end %>
+</div>
+<% end %>
+
+<% if current_user == @user %>
+<div>
+  <%if !@user.overpaid_lender(current_user).empty?%>
     <h4>Seems like you overpaid</h4>
     <ul>
       <% @user.overpaid_lender(current_user).each do |lender| %>
       <li><%=link_to lender.name, user_path(lender)%> - $<%= @user.total_amount_due(current_user, lender).abs%></li>
     <% end %>
-  <% end %>
   </ul>
+  <% end %>
 </div>
 <% end %>
 
+
 <% if current_user != @user%>
-<div>
-    <h4><%= "#{@user.name} borrowed from #{@user.borrowed.pluck(:lender_id).uniq.count} people" %></h4>
-    <% else  %>
+  <div>
+      <h4><%= "#{@user.name} borrowed from #{@user.borrowed.pluck(:lender_id).uniq.count} people" %></h4>
+  </div>
+<% end %>
+
+
       <% if !@user.lender_amount_not_zero(current_user).empty? %>
         <h4>These are the people you owe.</h4>
           <ul>
             <% @user.lender_amount_not_zero(current_user).each do |lender| %>
-            <% if !@user.overpaid_lender(current_user).include?(lender)%>
+
+              <% if !@user.overpaid_lender(current_user).include?(lender)%>
             <li><%=link_to lender.name, user_path(lender) %> - $<%= @user.total_amount_due(current_user, lender) %></li>
             <% end %>
           <% end %>
           </ul>
     <% end %>
 </div>
+
+<% if current_user == @user %>
+<div>
+
+  <%if !@user.overpaid_borrower(current_user).empty?%>
+    <h4>Seems like THESE are the people that overpaid YOU. </h4>
+    <ul>
+      <% @user.overpaid_borrower(current_user).each do |borrower| %>
+      <li><%=link_to borrower.name, user_path(borrower)%> - $<%= borrower.borrower_total_amount_due(current_user, borrower).abs%></li>
+    <% end %>
+  </ul>
+  <% end %>
+</div>
 <% end %>
+
+
+
 
 <% if current_user == @user %>
 <div>
@@ -83,8 +111,10 @@
     <h3>These are all of the people that you need to hunt</h3>
     <ul>
         <% @user.borrower_amount_not_zero(current_user).each do |borrower| %>
+        <% if !@user.overpaid_borrower(current_user).include?(borrower)%>
         <li><%=link_to borrower.name, user_path(borrower) %> - $<%= @user.borrower_total_amount_due(current_user, borrower) %></li>
-      <% end  %>
+        <% end %>
+      <% end %>
     </ul>
   <% end %>
 </div>

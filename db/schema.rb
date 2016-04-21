@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20160420023738) do
   create_table "transactions", force: :cascade do |t|
     t.integer  "lender_id"
     t.integer  "borrower_id"
-    t.integer  "amount"
+    t.integer  "amount",      default: 0
     t.boolean  "lending",     default: true
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false

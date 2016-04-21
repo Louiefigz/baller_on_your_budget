@@ -68,7 +68,8 @@ class User < ActiveRecord::Base
     def lender_amount_not_zero(current_user)
       collection = []
       unique_lenders.each do |lender|
-        if total_amount_due(current_user, lender) != 0
+
+        if lender.total_amount_due(current_user, lender) != 0
           collection << lender
         end
       end
@@ -96,6 +97,19 @@ class User < ActiveRecord::Base
       collection
     end
 
+    def display_overpaid_amount(current_user, user)
+      current_user.overpaid_lender(current_user).include?(user)
+    end
+
+    def overpaid_borrower(current_user)
+      collection = []
+      borrower_amount_not_zero(current_user).each do |borrower|
+      if borrower.borrower_total_amount_due(current_user, borrower) < 0
+        collection << borrower
+        end
+      end
+      collection
+    end
 
 
   #   if self.lender_ids.include?(lender.to_i)
