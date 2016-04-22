@@ -36,13 +36,6 @@ ActiveRecord::Schema.define(version: 20160421164045) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "notes", force: :cascade do |t|
-    t.string   "comment"
-    t.integer  "transaction_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
   create_table "transactions", force: :cascade do |t|
     t.integer  "lender_id"
     t.integer  "borrower_id"

@@ -40,16 +40,15 @@ class UsersController < ApplicationController
 
   end
 
-  def update
-    @user = User.find(params[:id])
-    @user.update(user_params)
-  end
-
   def show
     @transaction = Transaction.new
   end
 
-  def destroy
+  def update
+    @user = User.find(params[:id])
+    @user.update(user_params)
+    flash[:message] = "Added Friends Successfully"
+    redirect_to root_path
   end
 
 private

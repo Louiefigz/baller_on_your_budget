@@ -7,10 +7,10 @@ class Friendship < ActiveRecord::Base
 
     def find_all_friendships
         u=User.find(self.friend_id)
-        u.friends << User.find(self.user_id)
-        u.save
-
-
+        if !u.friends.include?(User.find(self.user_id))
+          u.friends << User.find(self.user_id)
+          u.save
+      end
     end
 
 end

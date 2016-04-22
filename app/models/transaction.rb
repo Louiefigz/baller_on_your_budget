@@ -3,7 +3,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :user
   belongs_to :lender, :class_name => 'User'#, foreign_key: 'lender_id'
   belongs_to :borrower, :class_name => 'User'#, foreign_key: 'borrower_id'
-  has_many :notes
+
 
   validates :amount, :numericality => { :only_integer => true, :greater_than => 0 }
 
@@ -17,7 +17,7 @@ class Transaction < ActiveRecord::Base
     c = Credit.find_or_create_by(lender_id: self.lender_id, borrower_id: self.borrower_id)
 
     if self.lending
-      
+
       if lender.balance - self.amount >= 0
         d.amount += self.amount
         lender.update(balance: lender.balance - self.amount)

@@ -19,8 +19,6 @@ class User < ActiveRecord::Base
 
 
 
-  has_many :notes, through: :transactions
-
   accepts_nested_attributes_for :friends
 
   def friends_attributes=(attributes)

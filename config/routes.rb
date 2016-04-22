@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
 
 
+  get 'feeds/home'
+
   devise_for :users, :controllers => { :omniauth_callbacks => "callbacks" }
   resources :users
 
@@ -18,7 +20,7 @@ Rails.application.routes.draw do
   post '/users/:id/add_friends', to: 'users#update_friends', as:'update_friends'
 
 
-  root 'profiles#home'
+  root 'feeds#home'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
