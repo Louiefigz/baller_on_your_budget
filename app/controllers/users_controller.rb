@@ -12,6 +12,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def index
+    @users = User.all
+    render json: @users
+  end
+
   def new
   end
 
@@ -42,6 +47,10 @@ class UsersController < ApplicationController
 
   def show
     @transaction = Transaction.new
+    respond_to do |f|
+      f.html { render :show }
+      f.json { render json: @user }
+    end
   end
 
   def update

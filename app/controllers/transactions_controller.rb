@@ -1,6 +1,12 @@
 class TransactionsController < ApplicationController
   before_action :logged_in?
 
+
+  def index
+    @transactions = Transaction.all
+    render json: @transactions 
+  end
+
   def new
   end
 

@@ -9,8 +9,8 @@ Rails.application.routes.draw do
 
 
 
-  resources :transactions, only: [:create, :new]
-  resources :friendships, only: [:create, :new]
+  resources :transactions, only: [:create, :new, :index]
+  resources :friendships, only: [:create, :new, :index]
 
 
   get '/users/:id/edit_balance', to: 'users#edit_balance', as:'edit_balance'

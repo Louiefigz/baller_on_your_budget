@@ -7,6 +7,10 @@ class FriendshipsController < ApplicationController
     friendship = Friendship.create(friend_params)
   end
 
+  def index
+    @friends = Friendship.all
+    render json: @friends
+  end
 
 private
 

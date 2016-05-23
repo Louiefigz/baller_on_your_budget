@@ -42,7 +42,8 @@ group :development, :test do
   gem "better_errors"
   gem 'omniauth'
   gem 'omniauth-facebook'
-  gem "omniauth-google-oauth2" 
+  gem "omniauth-google-oauth2"
+  gem 'active_model_serializers'
 end
 
 group :development do
