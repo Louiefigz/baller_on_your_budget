@@ -9,7 +9,11 @@ class FriendshipsController < ApplicationController
 
   def index
     @friends = Friendship.all
-    render json: @friends
+    amounts_due = []
+    @friends.each do |f|
+      amounts_due << current_user.total_amount_due(current_user, f)
+    end
+    render json: [ @friends, amounts_due ]
   end
 
 private
