@@ -48,20 +48,21 @@ class UsersController < ApplicationController
   def show
     @transaction = Transaction.new
 
-    amounts =[]
+    return_val = []
     @user.friends.each do |friend|
-      amounts << current_user.total_amount_due(current_user, friend)
+      obj = {}
+      obj[:friend] = friend
+      obj[:amount] = current_user.total_amount_due(current_user, friend)
+      obj[:borrower] = current_user.borrower_total_amount_due(current_user, friend)
+      return_val << obj
     end
 
-    borrower =[]
-    @user.friends.each do |friend|
-      borrower << current_user.borrower_total_amount_due(current_user, friend)
-    end
+    user_obj = {}
 
 
     respond_to do |f|
       f.html { render :show }
-      f.json { render json: [@user, amounts, borrower] }
+      f.json { render json: [return_val] }
     end
   end
 

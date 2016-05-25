@@ -1,3 +1,3 @@
-class UserTransactionSerializer < ActiveModel::Serializer
-  attributes :id, :amount, :lender, :borrower
-end
+# class UserTransactionSerializer < ActiveModel::Serializer
+#   attributes :id, :amount, :lender, :borrower
+# end
