@@ -131,6 +131,20 @@ class User < ActiveRecord::Base
       collection
     end
 
+def return_json
+  
+    return_val = []
+    self.friends.each do |friend|
+      obj = {}
+      obj[:friend] = friend
+      obj[:amount] = self.total_amount_due(self, friend)
+      obj[:borrower] = self.borrower_total_amount_due(self, friend)
+      return_val << obj
+    end
+
+    return_val
+end
+
 
   #   if self.lender_ids.include?(lender.to_i)
   #     lender = User.find(lender.to_i)
