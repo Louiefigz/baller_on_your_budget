@@ -14,7 +14,10 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-    render json: @users
+    respond_to do |f|
+      f.html { render :index }
+      f.json { render json: @users }
+    end
   end
 
   def new
@@ -47,7 +50,6 @@ class UsersController < ApplicationController
 
   def show
     @transaction = Transaction.new
-
     @user.return_json
 
     respond_to do |f|
@@ -70,6 +72,10 @@ private
 
   def user_params
     params.require(:user).permit(:friends_attributes => [:friend_ids=>[]])
+  end
+
+  def redirect_if_not_logged_in
+
   end
 
 end
