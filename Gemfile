@@ -44,6 +44,7 @@ group :development, :test do
   gem 'omniauth-facebook'
   gem "omniauth-google-oauth2"
   gem 'active_model_serializers'
+  gem 'dotenv-rails'
 end
 
 group :development do
