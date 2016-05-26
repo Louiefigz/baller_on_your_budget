@@ -60,7 +60,6 @@ function viewFriends(){
 }
 
 function showFriends(friends){
-  
   var dom = $();
   var i = 0 ;
 

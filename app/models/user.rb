@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
     end
 
 def return_json
-  
+   
     return_val = []
     self.friends.each do |friend|
       obj = {}

@@ -74,8 +74,4 @@ private
     params.require(:user).permit(:friends_attributes => [:friend_ids=>[]])
   end
 
-  def redirect_if_not_logged_in
-
-  end
-
 end
