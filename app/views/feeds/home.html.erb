@@ -11,6 +11,12 @@
 <% end %>
 </ul>
 
-
 <h3> Add your friends here</h3>
-  <%= link_to "Add Friends", add_friends_path(:id=>current_user.id) %>
+<%= link_to "Add Friends", add_friends_path(:id=>current_user.id) %>
+
+<h3>These are the top five biggest lent amounts!</h3>
+<ul>
+  <% @biggest.each do |trans| %>
+  <li><%= trans.lender.name %> lent <%= trans.amount%> to <%= trans.borrower.name%></li>
+  <% end %>
+</ul>

@@ -3,7 +3,8 @@ class TransactionsController < ApplicationController
 
 
   def index
-    @transactions = Transaction.all
+    @user = User.find(params[:id])
+    # @transactions = Transaction.all
     render json: @transactions
   end
 
@@ -35,6 +36,10 @@ class TransactionsController < ApplicationController
   end
 
   def destroy
+  end
+
+  def show
+
   end
 
   private

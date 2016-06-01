@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
 
 
-  resources :transactions, only: [:create, :new, :index]
+  resources :transactions, only: [:create, :new, :index, :show]
   resources :friendships, only: [:create, :new, :index]
 
 

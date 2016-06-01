@@ -6,7 +6,7 @@ class Transaction < ActiveRecord::Base
 
 
   validates :amount, :numericality => { :only_integer => true, :greater_than => 0 }
-  scope :repay, -> { where lending: false}
+  
   scope :biggest, -> { order ('amount DESC LIMIT 5') }
 
 
