@@ -7,6 +7,8 @@ class Transaction < ActiveRecord::Base
 
   validates :amount, :numericality => { :only_integer => true, :greater_than => 0 }
 
+
+
   after_create :update_debit_credit
 
   def update_debit_credit

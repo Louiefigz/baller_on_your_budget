@@ -4,14 +4,13 @@ class TransactionsController < ApplicationController
 
   def index
     @transactions = Transaction.all
-    render json: @transactions 
+    render json: @transactions
   end
 
   def new
   end
 
   def create
-
 
     @transaction = Transaction.new(trans_params)
     # @transaction.update(borrower_id: current_user.id)
@@ -23,7 +22,7 @@ class TransactionsController < ApplicationController
       redirect_to user_path(current_user), flash[:message] => "Well it seems like she isn't eating for a few weeks"
     else
       # raise
-      flash[:message] = "He didn't have enough money or something"
+      flash[:message] = @transaction.errors.full_messages[0]
       redirect_to user_path(current_user.id)
     end
   end
