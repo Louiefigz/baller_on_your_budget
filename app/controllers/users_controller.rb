@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+
     respond_to do |f|
       f.html { render :index }
       f.json { render json: @users }
@@ -50,6 +51,7 @@ class UsersController < ApplicationController
 
   def show
     @transaction = Transaction.new
+    @friends = @user.friends
     @user.return_json
 
     respond_to do |f|
@@ -64,6 +66,11 @@ class UsersController < ApplicationController
     flash[:message] = "Added Friends Successfully"
     redirect_to root_path
   end
+
+  # def friends
+  #   @friends = @user.friends
+  # end
+
 
 private
   def set_user

@@ -42,7 +42,7 @@
       $<%= f.text_field :amount %>
       <%= f.hidden_field :lender_id, value: @user.id %>
       <%= f.hidden_field :lending, value: false %>
-      <%= f.submit "You're doing the right thing" %>
+      <%= f.submit "Your doing the right thing" %>
       <% end %>
   <% end %>
 <% end %>
@@ -61,8 +61,7 @@
     <h4>Seems like you overpaid</h4>
     <ul>
       <% @user.overpaid_lender(current_user).each do |lender| %>
-
-      <li><%=link_to(lender.name, user_friendship_path(@user.id, lender.id))%> - $<%= @user.total_amount_due(current_user, lender).abs%></li>
+      <li><%=link_to lender.name, user_path(lender)%> - $<%= @user.total_amount_due(current_user, lender).abs%></li>
     <% end %>
   </ul>
   <% end %>
@@ -83,7 +82,7 @@
             <% @user.lender_amount_not_zero(current_user).each do |lender| %>
 
               <% if !@user.overpaid_lender(current_user).include?(lender)%>
-            <li><%=link_to lender.name, user_friendship_path(@user.id, lender.id) %> - $<%= @user.total_amount_due(current_user, lender) %></li>
+            <li><%=link_to lender.name, user_path(lender) %> - $<%= @user.total_amount_due(current_user, lender) %></li>
             <% end %>
           <% end %>
           </ul>
@@ -97,7 +96,7 @@
     <h4>Seems like THESE are the people that overpaid YOU. </h4>
     <ul>
       <% @user.overpaid_borrower(current_user).each do |borrower| %>
-      <li><%=link_to borrower.name, user_friendship_path(@user.id, borrower.id)%> - $<%= borrower.borrower_total_amount_due(current_user, borrower).abs%></li>
+      <li><%=link_to borrower.name, user_path(borrower)%> - $<%= borrower.borrower_total_amount_due(current_user, borrower).abs%></li>
     <% end %>
   </ul>
   <% end %>
@@ -114,7 +113,7 @@
     <ul>
         <% @user.borrower_amount_not_zero(current_user).each do |borrower| %>
         <% if !@user.overpaid_borrower(current_user).include?(borrower)%>
-        <li><%=link_to borrower.name, user_friendship_path(@user.id, borrower.id) %> - $<%= @user.borrower_total_amount_due(current_user, borrower) %></li>
+        <li><%=link_to borrower.name, user_path(borrower) %> - $<%= @user.borrower_total_amount_due(current_user, borrower) %></li>
         <% end %>
       <% end %>
     </ul>

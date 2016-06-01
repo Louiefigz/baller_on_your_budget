@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   get 'feeds/home'
 
   devise_for :users, :controllers => { :omniauth_callbacks => "callbacks" }
-  resources :users
+  resources :users do
+    resources :friendships
+  end
 
 
 

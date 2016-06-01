@@ -16,6 +16,11 @@ class FriendshipsController < ApplicationController
     render json: [ @friends, amounts_due ]
   end
 
+  def show
+    @user = User.find(params[:user_id])
+      @friends = @user.friends.find(params[:id])
+  end
+
 private
 
   def friend_params
