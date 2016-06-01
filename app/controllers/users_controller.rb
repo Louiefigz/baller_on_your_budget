@@ -50,6 +50,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    binding.pry
     @transaction = Transaction.new
     @friends = @user.friends
     @user.return_json

@@ -23,7 +23,7 @@ class TransactionsController < ApplicationController
     else
       # raise
       flash[:message] = @transaction.errors.full_messages[0]
-      redirect_to user_path(current_user.id)
+      redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
     end
   end
 

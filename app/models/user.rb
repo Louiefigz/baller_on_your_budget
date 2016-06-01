@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   has_many :friendships
   has_many :friends, :through => :friendships
 
+  scope :lent_amount, -> { order ('lent_out DESC LIMIT 5') }
 
 
   accepts_nested_attributes_for :friends
@@ -132,7 +133,7 @@ class User < ActiveRecord::Base
     end
 
 def return_json
-   
+
     return_val = []
     self.friends.each do |friend|
       obj = {}

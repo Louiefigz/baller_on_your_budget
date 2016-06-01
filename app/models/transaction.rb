@@ -6,12 +6,14 @@ class Transaction < ActiveRecord::Base
 
 
   validates :amount, :numericality => { :only_integer => true, :greater_than => 0 }
-
+  scope :repay, -> { where lending: false}
+  scope :biggest, -> { order ('amount DESC LIMIT 5') }
 
 
   after_create :update_debit_credit
 
   def update_debit_credit
+
     lender = User.find(self.lender_id)
     borrower = User.find(self.borrower_id)
 
