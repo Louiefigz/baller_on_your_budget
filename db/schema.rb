@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160421164045) do
+ActiveRecord::Schema.define(version: 20160602214027) do
 
   create_table "credits", force: :cascade do |t|
     t.integer  "amount",      default: 0
@@ -34,6 +34,12 @@ ActiveRecord::Schema.define(version: 20160421164045) do
     t.integer  "friend_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "relationships", force: :cascade do |t|
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -62,6 +68,7 @@ ActiveRecord::Schema.define(version: 20160421164045) do
     t.string   "last_sign_in_ip"
     t.string   "provider"
     t.string   "uid"
+    t.string   "relationship"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
