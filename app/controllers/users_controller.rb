@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance]
 
+@@email = 1
 
   def self.new_with_session(params, session)
     super.tap do |user|
@@ -50,7 +51,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    
+
     @transaction = Transaction.new
     @friends = @user.friends
     @user.return_json
@@ -62,9 +63,18 @@ class UsersController < ApplicationController
   end
 
   def update
+
     @user = User.find(params[:id])
     @user.update(user_params)
+     if params[:user][:users][:name] !=""
+       e = "#{@@email}@gmail.com"
+    
+       person = User.new(name:params[:user][:users][:name].strip, email: e)
+       person.save(validate:false)
+       @user.friends << person
+     end
     flash[:message] = "Added Friends Successfully"
+    @@email +=1
     redirect_to root_path
   end
 
@@ -79,7 +89,7 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:friends_attributes => [:friend_ids=>[]])
+    params.require(:user).permit(:friends_attributes => [:friend_ids=>[]], users_attributes: [:name])
   end
 
 end

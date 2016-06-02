@@ -8,4 +8,13 @@
   <%= u.collection_check_boxes :friend_ids, User.all, :id, :name %>
   <%= u.submit "Add Friends"%>
 <% end %>
+
+<h2>Adding new friends</h2>
+<h3>Add a friend that isnt here on this list!</h3>
+
+  <%= f.fields_for :users, User.new do |user| %>
+  <%= user.label :name %>
+  <%= user.text_field :name %>
+  <%= f.submit "Add Friend" %>
+  <% end %>
 <% end %>
