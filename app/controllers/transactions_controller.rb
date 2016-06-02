@@ -3,8 +3,7 @@ class TransactionsController < ApplicationController
 
 
   def index
-    @user = User.find(params[:id])
-    # @transactions = Transaction.all
+     @transactions = Transaction.all
     render json: @transactions
   end
 
