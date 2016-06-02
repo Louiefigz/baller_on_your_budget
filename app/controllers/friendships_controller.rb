@@ -25,7 +25,7 @@ class FriendshipsController < ApplicationController
 private
 
   def friend_params
-    params.require(:friendship).permit(:user_id, :friendship_ids=> [])
+    params.require(:friendship).permit(:user_id, :friendship_ids=> [], :user_attributes: [:name])
 
   end
 

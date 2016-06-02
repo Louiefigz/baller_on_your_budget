@@ -1,10 +1,18 @@
 
+
 <h2>Adding new friends</h2>
 
 <%= form_for @friendship do |f| %>
-  <%= fields_for :friends %>
-  <%= f.label :id %>
-  <%= f.collection_check_boxes :id, User.all, :id, :name %>
-  <%= f.hidden_field :user_id, value: current_user.id %>
+  <%= fields_for :friends do |e|%>
+  <%= e.label :id %>
+  <%= e.collection_check_boxes :id, User.all, :id, :name %>
+  <%= e.hidden_field :user_id, value: current_user.id %>
+  <% end %>
+<h3>Add a friend that isnt here on this list!</h3>
+
+  <%= f.fields_for :users, User.new do |user| %>
+  <%= user.label :name %>
+  <%= user.text_field :name %>
   <%= f.submit %>
+  <% end %>
 <% end %>
