@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :logged_in?
   before_action :authenticate_user!
-  before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance]
+  before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance, :friend_relationship]
 
 @@email = 1
 
@@ -26,6 +26,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    binding.pry
   end
 
   def edit
@@ -42,16 +43,20 @@ class UsersController < ApplicationController
   end
 
   def add_friends
+    @relationships = Relationship.all
     @user = current_user
-
   end
 
   def update_friends
 
   end
 
-  def show
+  def friend_relationship
+    @relationships = Relationship.all
+    @relationship = Relationship.new
+  end
 
+  def show
     @transaction = Transaction.new
     @friends = @user.friends
     @user.return_json
@@ -63,12 +68,13 @@ class UsersController < ApplicationController
   end
 
   def update
+    binding.pry
 
     @user = User.find(params[:id])
     @user.update(user_params)
+
      if params[:user][:users][:name] !=""
        e = "#{@@email}@gmail.com"
-    
        person = User.new(name:params[:user][:users][:name].strip, email: e)
        person.save(validate:false)
        @user.friends << person

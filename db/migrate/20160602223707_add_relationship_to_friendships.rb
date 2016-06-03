@@ -1,5 +1,5 @@
 class AddRelationshipToFriendships < ActiveRecord::Migration
   def change
-    add_column :users, :relationship, :string
+    add_column :friendships, :relationship, :string
   end
 end

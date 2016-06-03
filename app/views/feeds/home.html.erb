@@ -7,7 +7,9 @@
 
 <ul>
 <% current_user.friends.each do |friend| %>
-  <li><%= link_to friend.name, user_friendship_path(current_user.id, friend.id) %></li>
+
+  <li><%= link_to friend.name, user_friendship_path(current_user.id, friend.id) %> -<%= friend.friend_relationship(current_user.id, friend.id)%> - 
+     <%=link_to "Edit Relationship", friend_relationship_path(current_user.id, friend.id)%></li>
 <% end %>
 </ul>
 

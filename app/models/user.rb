@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :friends
 
   def friends_attributes=(attributes)
-
+    binding.pry
   attributes["friend_ids"].each do |attribute|
     if attribute != ""
      friend = User.find_or_create_by(id: attribute)
@@ -148,6 +148,12 @@ def return_json
     end
 
     return_val
+end
+
+def friend_relationship(current_user, friend_id)
+  rel = Friendship.find_by(user_id: current_user, friend_id: friend_id)
+  rel.relationship
+
 end
 
 

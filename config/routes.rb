@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
 
   resources :transactions, only: [:create, :new, :index]
-  resources :friendships, only: [:create, :new, :index]
+  resources :friendships, only: [:create, :new, :index, :edit, :update]
   resources :relationships, only: [:create, :new, :index]
 
 
@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   get '/users/:id/add_friends', to: 'users#add_friends', as:'add_friends'
   post '/users/:id/add_friends', to: 'users#update_friends', as:'update_friends'
+
+  get '/users/:id/friend_relationship/:id', to: 'users#friend_relationship', as:'friend_relationship'
 
 
   root 'feeds#home'

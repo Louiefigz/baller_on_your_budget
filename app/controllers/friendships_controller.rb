@@ -22,6 +22,7 @@ class FriendshipsController < ApplicationController
       @user = @user_redirect.friends.find(params[:id])
   end
 
+
 private
 
   def friend_params
