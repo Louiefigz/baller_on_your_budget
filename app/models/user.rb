@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :friends
 
   def friends_attributes=(attributes)
-    
+
   attributes["friend_ids"].each do |attribute|
     if attribute != ""
      friend = User.find_or_create_by(id: attribute)
@@ -153,7 +153,14 @@ end
 def friend_relationship(current_user, friend_id)
   rel = Friendship.find_by(user_id: current_user, friend_id: friend_id)
   rel.relationship
+end
 
+def update_friends(user_name, e)
+  if user_name !=""
+    person = User.new(name:user_name.strip, email: e)
+    person.save(validate:false)
+    self.friends << person
+  end
 end
 
 

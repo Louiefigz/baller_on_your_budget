@@ -70,18 +70,16 @@ class UsersController < ApplicationController
   def update
     number = Random.rand(10000000)
     letters = [*('A'..'Z')].sample(8).join
+    user_name = params[:user][:users][:name]
+    e = "#{number}#{letters}@gmail.com"
 
     @user = User.find(params[:id])
     @user.update(user_params)
+    @user.update_friends(user_name, e)
 
-     if params[:user][:users][:name] !=""
-       e = "#{number}#{letters}@gmail.com"
-       person = User.new(name:params[:user][:users][:name].strip, email: e)
-       person.save(validate:false)
-       @user.friends << person
-     end
+
     flash[:message] = "Added Friends Successfully"
-  
+
     redirect_to root_path
   end
 
