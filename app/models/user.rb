@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :friends
 
   def friends_attributes=(attributes)
-    binding.pry
+    
   attributes["friend_ids"].each do |attribute|
     if attribute != ""
      friend = User.find_or_create_by(id: attribute)

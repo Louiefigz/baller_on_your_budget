@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance, :friend_relationship]
 
-@@email = 1
+@@email = 22
 
   def self.new_with_session(params, session)
     super.tap do |user|
@@ -68,19 +68,20 @@ class UsersController < ApplicationController
   end
 
   def update
-    binding.pry
+    number = Random.rand(10000000)
+    letters = [*('A'..'Z')].sample(8).join
 
     @user = User.find(params[:id])
     @user.update(user_params)
 
      if params[:user][:users][:name] !=""
-       e = "#{@@email}@gmail.com"
+       e = "#{number}#{letters}@gmail.com"
        person = User.new(name:params[:user][:users][:name].strip, email: e)
        person.save(validate:false)
        @user.friends << person
      end
     flash[:message] = "Added Friends Successfully"
-    @@email +=1
+  
     redirect_to root_path
   end
 

@@ -4,6 +4,7 @@ class Friendship < ActiveRecord::Base
 
 
     after_create :find_all_friendships
+    after_create :set_relationship
 
     def find_all_friendships
         u=User.find(self.friend_id)
@@ -11,6 +12,12 @@ class Friendship < ActiveRecord::Base
           u.friends << User.find(self.user_id)
           u.save
       end
+    end
+
+    def set_relationship
+
+      self.relationship = "just a regular friend"
+      self.save
     end
 
 end
