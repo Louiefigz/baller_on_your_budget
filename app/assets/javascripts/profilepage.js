@@ -61,7 +61,7 @@ function viewFriends(){
 
 function showFriends(friends){
   var dom = $();
-  var i = 0 ;
+  // var i = 0 ;
 
   if (friends.length == 0){
     url = "<a href=" + url + '/add_friends' + ">" + "Add a new friend(because you don't have any)" + "</a>";
@@ -70,10 +70,10 @@ function showFriends(friends){
 
   friends.forEach(function(friend){
     dom = dom.add(showFriend(friend.friend));
-    i++;
+    // i++;
   })
-  $("#allFriends").html(dom);
-}
+    $("#allFriends").html(dom);
+  }
     $('#allFriends').show();
 }
 

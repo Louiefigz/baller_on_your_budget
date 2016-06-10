@@ -4,12 +4,21 @@
 
 <%= form_for @user do |f| %>
 
+<h4>How close are you to these people?  Use the drop down box or create a unique relationship</h4>
 
+<%= f.fields_for :relationships, Relationship.new do |relationship| %>
+<%=select("description", "relationship_id", @relationships.collect {|r| [ r.description, r.id ] }, { :include_blank => true })%>
+<%= relationship.label :description %>
+<%= relationship.text_field :description %>
+<%= relationship.hidden_field :friend_id, value: @user.id %>
+<%= relationship.hidden_field :user_id, value: current_user.id %>
+<% end %><br><br>
+
+<h4>Find your friends! </h4>
   <%= f.fields_for :friends_attributes do |u| %>
   <%= u.collection_check_boxes :friend_ids, User.all, :id, :name %>
   <%= u.submit "Add Friends"%>
 <% end %><br>
-
 
 
 <h3>Add a friend that isnt here on this list!</h3>

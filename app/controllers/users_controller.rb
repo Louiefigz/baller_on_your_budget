@@ -68,6 +68,10 @@ class UsersController < ApplicationController
   end
 
   def update
+
+
+
+
     number = Random.rand(10000000)
     letters = [*('A'..'Z')].sample(8).join
     user_name = params[:user][:users][:name]
@@ -76,6 +80,50 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.update(user_params)
     @user.update_friends(user_name, e)
+  if user_name != "" && rel_params[:description] == ""
+    new_user_info = User.find_by(name:user_name)
+    word = drop_params[:relationship_id].to_i
+    new_word = Relationship.find(word)
+    new_friend_relationship = Friendship.find_by(user_id: current_user.id, friend_id: new_user_info.id)
+    new_friend_relationship.update(relationship: new_word.description)
+
+  end
+
+    word = drop_params[:relationship_id].to_i
+
+      if rel_params[:description] == ""
+
+        if friend_params[:friend_id] != friend_params[:user_id]
+          friend = Friendship.find_or_create_by(friend_params)
+          new_word = Relationship.find(word)
+          friend.update(relationship: new_word.description)
+        end
+        user_params[:friends_attributes][:friend_ids].each do |friend|
+          if friend != ""
+            existing_friend = User.find(friend)
+            set_relationship = Friendship.find_or_create_by(friend_id: existing_friend.id, user_id: current_user.id)
+            new_word = Relationship.find(word)
+            set_relationship.update(relationship: new_word.description)
+          end
+
+
+        end
+      else
+        new_word =Relationship.find_or_create_by(description: rel_params[:description])
+
+        user_params[:friends_attributes][:friend_ids].each do |friend|
+
+          if friend != ""
+            existing_friend = User.find(friend)
+            if existing_friend.id != current_user.id
+
+              set_relationship = Friendship.find_or_create_by(friend_id: existing_friend.id, user_id: current_user.id)
+              set_relationship.update(relationship: new_word.description)
+          end
+
+        end
+      end
+    end
 
 
     flash[:message] = "Added Friends Successfully"
@@ -95,6 +143,17 @@ private
 
   def user_params
     params.require(:user).permit(:friends_attributes => [:friend_ids=>[]], users_attributes: [:name])
+  end
+
+  def drop_params
+    params.require(:description).permit(:relationship_id)
+  end
+
+  def friend_params
+    params.require(:user)[:relationships].permit(:friend_id, :user_id)
+  end
+  def rel_params
+    params.require(:user)[:relationships].permit(:description)
   end
 
 end

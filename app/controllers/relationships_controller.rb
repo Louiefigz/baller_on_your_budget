@@ -5,7 +5,7 @@ class RelationshipsController < ApplicationController
   end
 
   def create
-
+    binding.pry 
     word = drop_params[:relationship_id].to_i
 
     if rel_params[:description] == ""

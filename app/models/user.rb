@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
 
   has_many :friendships
   has_many :friends, :through => :friendships
-
   has_many :relationships
+
 
   scope :lent_amount, -> { order ('lent_out DESC LIMIT 5') }
 
@@ -151,6 +151,7 @@ def return_json
 end
 
 def friend_relationship(current_user, friend_id)
+
   rel = Friendship.find_by(user_id: current_user, friend_id: friend_id)
   rel.relationship
 end
@@ -159,7 +160,7 @@ def update_friends(user_name, e)
   if user_name !=""
     person = User.new(name:user_name.strip, email: e)
     person.save(validate:false)
-    self.friends << person
+    new_friend =Friendship.create(user_id:self.id, friend_id:person.id)
   end
 end
 

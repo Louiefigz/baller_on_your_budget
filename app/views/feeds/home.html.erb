@@ -17,7 +17,7 @@
 
 <h3>These are the top five biggest lent amounts!</h3>
 <ul>
-  <% @biggest.each do |trans| %>
-  <li><%= trans.lender.name %> lent <%= trans.amount%> to <%= trans.borrower.name%></li>
+  <% @biggest.each do |transaction| %>
+  <li><%= transaction.lender.name %> lent <%= transaction.amount%> to <%= transaction.borrower.name%></li>
   <% end %>
 </ul>
