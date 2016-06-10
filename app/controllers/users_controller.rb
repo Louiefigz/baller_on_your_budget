@@ -77,19 +77,68 @@ class UsersController < ApplicationController
     user_name = params[:user][:users][:name]
     e = "#{number}#{letters}@gmail.com"
 
+
+
+
     @user = User.find(params[:id])
     @user.update(user_params)
     @user.update_friends(user_name, e)
   if user_name != "" && rel_params[:description] == ""
-    new_user_info = User.find_by(name:user_name)
-    word = drop_params[:relationship_id].to_i
+
+    if drop_params[:relationship_id].to_i != 0
+      word = drop_params[:relationship_id].to_i
+    else
+      word = 1
+    end
+
+    new_user_info = User.last
+
     new_word = Relationship.find(word)
     new_friend_relationship = Friendship.find_by(user_id: current_user.id, friend_id: new_user_info.id)
     new_friend_relationship.update(relationship: new_word.description)
 
+    if amount_params != ""
+      @transaction = Transaction.new(lender_id: current_user.id, borrower_id: new_user_info.id, amount: amount_params)
+
+      if @transaction.save
+      else
+        flash[:message] = @transaction.errors.full_messages[0]
+        redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+      end
+    end
+  else
+
+    if drop_params[:relationship_id].to_i != 0
+      word = drop_params[:relationship_id].to_i
+    else
+      word = 1
+    end
+
+    new_word =Relationship.find_or_create_by(description: rel_params[:description])
+    new_friend_rel = Friendship.find_by(user_id: current_user.id, friend_id: User.last.id)
+    new_friend_rel.update(relationship: new_word.description)
+
+    if amount_params != ""
+      @transaction = Transaction.new(lender_id: current_user.id, borrower_id: User.last.id, amount: amount_params)
+
+      if @transaction.save
+      else
+        flash[:message] = @transaction.errors.full_messages[0]
+        redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+      end
+    end
+
+
+
+
   end
 
+  if drop_params[:relationship_id].to_i != 0
     word = drop_params[:relationship_id].to_i
+  else
+    word = 1
+  end
+
 
       if rel_params[:description] == ""
 
@@ -97,6 +146,7 @@ class UsersController < ApplicationController
           friend = Friendship.find_or_create_by(friend_params)
           new_word = Relationship.find(word)
           friend.update(relationship: new_word.description)
+
         end
         user_params[:friends_attributes][:friend_ids].each do |friend|
           if friend != ""
@@ -104,9 +154,19 @@ class UsersController < ApplicationController
             set_relationship = Friendship.find_or_create_by(friend_id: existing_friend.id, user_id: current_user.id)
             new_word = Relationship.find(word)
             set_relationship.update(relationship: new_word.description)
+
+            if amount_params != ""
+              @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend.to_i, amount: amount_params)
+
+              if @transaction.save
+              else
+                flash[:message] = @transaction.errors.full_messages[0]
+                redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+              end
+            end
+
+
           end
-
-
         end
       else
         new_word =Relationship.find_or_create_by(description: rel_params[:description])
@@ -119,12 +179,26 @@ class UsersController < ApplicationController
 
               set_relationship = Friendship.find_or_create_by(friend_id: existing_friend.id, user_id: current_user.id)
               set_relationship.update(relationship: new_word.description)
+
+
+              if amount_params != ""
+                @transaction = Transaction.new(lender_id: current_user.id, borrower_id: existing_friend.id, amount: amount_params)
+                if @transaction.save
+                  else
+                    flash[:message] = @transaction.errors.full_messages[0]
+                    redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+                end
+              end
           end
 
         end
       end
     end
+binding.pry
 
+# amount  = amount_params
+# lender_id = current_user.id
+# borrower_id = friend_id
 
     flash[:message] = "Added Friends Successfully"
 
@@ -154,6 +228,9 @@ private
   end
   def rel_params
     params.require(:user)[:relationships].permit(:description)
+  end
+  def amount_params
+    params.require(:user)[:transactions].permit(:amount)[:amount]
   end
 
 end

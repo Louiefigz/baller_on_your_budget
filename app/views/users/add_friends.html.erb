@@ -17,7 +17,11 @@
 <h4>Find your friends! </h4>
   <%= f.fields_for :friends_attributes do |u| %>
   <%= u.collection_check_boxes :friend_ids, User.all, :id, :name %>
-  <%= u.submit "Add Friends"%>
+<h5>Would you like to lend them money? (Optional): </h5>
+  <%=f.fields_for :transactions, Transaction.new do |transaction|%>
+  <%= transaction.text_field :amount%>
+  <% end %>
+  <br><%= u.submit "Add Friends"%>
 <% end %><br>
 
 
