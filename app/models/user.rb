@@ -165,6 +165,117 @@ def update_friends(user_name, e)
 end
 
 
+def create_this_transaction(current_user, friend, amount_params)
+  if amount_params != ""
+    @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend.to_i, amount: amount_params)
+
+    if @transaction.save
+    else
+      flash[:message] = @transaction.errors.full_messages[0]
+      redirect_to root_path
+    end
+  end
+end
+
+def setting_default_relationship(drop_params)
+  if drop_params[:relationship_id].to_i != 0
+    word = drop_params[:relationship_id].to_i
+  else
+    word = 1
+  end
+  word
+end
+
+def setting_relationship_variable(current_user, new_user_info, new_word)
+  new_friend_relationship = Friendship.find_by(user_id: current_user.id, friend_id: new_user_info)
+  new_friend_relationship.update(relationship: new_word.description)
+end
+
+
+def creating_relationship_transaction_friend(user_name, rel_params, drop_params, amount_params, current_user )
+  if user_name != "" && rel_params[:description] == ""
+
+  word = self.setting_default_relationship(drop_params)
+
+    new_user_info = User.last.id
+    new_word = Relationship.find(word)
+    self.setting_relationship_variable(current_user, new_user_info, new_word)
+
+    self.create_this_transaction(current_user, new_user_info, amount_params)
+
+  else
+
+  self.setting_default_relationship(drop_params)
+
+    new_word =Relationship.find_or_create_by(description: rel_params[:description])
+    new_user_info = User.last.id
+    self.setting_relationship_variable(current_user, new_user_info, new_word)
+
+    friend_id = User.last.id
+    self.create_this_transaction(current_user, friend_id, amount_params)
+
+  end
+end
+
+
+def create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user)
+if drop_params[:relationship_id].to_i != 0
+  word = drop_params[:relationship_id].to_i
+else
+  word = 1
+end
+
+
+    if rel_params[:description] == ""
+
+      if friend_params[:friend_id] != friend_params[:user_id]
+        friend = Friendship.find_or_create_by(friend_params)
+        new_word = Relationship.find(word)
+        friend.update(relationship: new_word.description)
+
+      end
+      user_params[:friends_attributes][:friend_ids].each do |friend|
+        if friend != ""
+          existing_friend = User.find(friend)
+          set_relationship = Friendship.find_or_create_by(friend_id: existing_friend.id, user_id: current_user.id)
+          new_word = Relationship.find(word)
+          set_relationship.update(relationship: new_word.description)
+
+          self.create_this_transaction(current_user, friend, amount_params)
+
+        end
+      end
+    else
+      new_word =Relationship.find_or_create_by(description: rel_params[:description])
+
+      user_params[:friends_attributes][:friend_ids].each do |friend|
+
+        if friend != ""
+          existing_friend = User.find(friend)
+          if existing_friend.id != current_user.id
+
+            set_relationship = Friendship.find_or_create_by(friend_id: existing_friend.id, user_id: current_user.id)
+            set_relationship.update(relationship: new_word.description)
+
+
+            if amount_params != ""
+              @transaction = Transaction.new(lender_id: current_user.id, borrower_id: existing_friend.id, amount: amount_params)
+              if @transaction.save
+                else
+                  flash[:message] = @transaction.errors.full_messages[0]
+                  redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+              end
+            end
+        end
+
+      end
+    end
+  end
+end
+
+
+
+
   #   if self.lender_ids.include?(lender.to_i)
   #     lender = User.find(lender.to_i)
   #   end

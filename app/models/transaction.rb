@@ -6,7 +6,7 @@ class Transaction < ActiveRecord::Base
 
 
   validates :amount, :numericality => { :only_integer => true, :greater_than => 0 }
-  
+
   scope :biggest, -> { order ('amount DESC LIMIT 5') }
 
 
@@ -38,6 +38,19 @@ class Transaction < ActiveRecord::Base
     c.save
   end
 
+
+  def create_this_transaction(current_user, friend, amount_params)
+    if amount_params != ""
+      @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend.to_i, amount: amount_params)
+
+      if @transaction.save
+      else
+        flash[:message] = @transaction.errors.full_messages[0]
+        redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+      end
+    end
+
+  end
 
 
 end
