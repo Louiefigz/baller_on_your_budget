@@ -17,17 +17,16 @@ To get this project up and running,
   2. Run Bundle Install
   3. rake db:migrate
   4. rake db:seed
-
 For testing in the local host, you may use 'rails s'
-
+I have sample accounts for testing. Take a look at the seed.rb file for username and passwords.  
 
 
 ## Contributing
   1. Fork
-  2. submit PR
-  3. include tests
-  4. explain why the changes are worth adding
-  5. if not sure if I'll accept feature, start by creating an issue.
+  2. Submit PR
+  3. Include tests
+  4. Explain why the changes are worth adding
+  5. If not sure if I'll accept feature, start by creating an issue.
 
 ## License
 
