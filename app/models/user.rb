@@ -148,7 +148,6 @@ def return_json
       obj[:borrower] = self.borrower_total_amount_due(self, friend)
       return_val << obj
     end
-
     return_val
 end
 
@@ -168,7 +167,7 @@ end
 
 
 def create_this_transaction(current_user, friend, amount_params)
-  if amount_params != ""
+  if amount_params != "" && amount_params != "0"
     @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend, amount: amount_params)
 
     if @transaction.save

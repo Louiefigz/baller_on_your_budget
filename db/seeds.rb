@@ -17,31 +17,64 @@ User.create(
 end
 
 
-User.create(
+user_1 = User.create(
   name: "frank",
   email: "frank@gmail.com",
-  balance: "200",
+  balance: "20000",
   password: "12345678",
 
 )
-User.create(
+user_2 = User.create(
   name: "Roberto",
   email: "roberto@gmail.com",
-  balance: "500",
+  balance: "5000",
   password: "12345678",
 
 )
 
-User.create(
+user_3 = User.create(
   name: "aaron",
   email: "aaron@gmail.com",
-  balance: "1000",
+  balance: "10000",
   password: "12345678",
 )
 
-User.create(
+user_4 = User.create(
   name: "cori",
   email: "cori@gmail.com",
-  balance: "",
+  balance: "20000",
   password: "12345678",
 )
+
+user_5 = User.create(
+  name: "Nick",
+  email: "nick@gmail.com",
+  balance: "7000",
+  password: "12345678",
+)
+
+user_6 = User.create(
+  name: "Burke",
+  email: "burke@gmail.com",
+  balance: "6000",
+  password: "12345678",
+)
+
+Transaction.create(lender_id: user_1.id, borrower_id: user_2.id, amount: 10)
+Transaction.create(lender_id: user_1.id, borrower_id: user_4.id, amount: 5)
+Transaction.create(lender_id: user_2.id, borrower_id: user_3.id, amount: 5)
+Transaction.create(lender_id: user_1.id, borrower_id: user_5.id, amount: 5)
+Transaction.create(lender_id: user_2.id, borrower_id: user_4.id, amount: 5)
+Transaction.create(lender_id: user_4.id, borrower_id: user_1.id, amount: 15)
+Transaction.create(lender_id: user_3.id, borrower_id: user_6.id, amount: 15)
+Transaction.create(lender_id: user_6.id, borrower_id: user_1.id, amount: 15)
+
+Friendship.create(user_id: user_1, friend_id: user_2)
+Friendship.create(user_id: user_1, friend_id: user_3)
+Friendship.create(user_id: user_1, friend_id: user_4)
+Friendship.create(user_id: user_1, friend_id: user_5)
+Friendship.create(user_id: user_2, friend_id: user_5)
+Friendship.create(user_id: user_2, friend_id: user_4)
+Friendship.create(user_id: user_2, friend_id: user_3)
+Friendship.create(user_id: user_3, friend_id: user_4)
+Friendship.create(user_id: user_3, friend_id: user_5)
