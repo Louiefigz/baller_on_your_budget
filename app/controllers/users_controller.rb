@@ -2,6 +2,15 @@ class UsersController < ApplicationController
   before_action :logged_in?
   before_action :authenticate_user!
   before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance, :friend_relationship]
+  after_filter :flash_notice
+
+  def flash_notice
+
+    if !@user.flash_notice.blank?
+          flash[:notice] = @user.flash_notice
+        
+       end
+  end
 
 @@email = 22
 
@@ -26,7 +35,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    binding.pry
+
   end
 
   def edit
@@ -68,36 +77,22 @@ class UsersController < ApplicationController
   end
 
   def update
-
-
-
-
     number = Random.rand(10000000)
     letters = [*('A'..'Z')].sample(8).join
     user_name = params[:user][:users][:name]
     e = "#{number}#{letters}@gmail.com"
-
-
-
-
     @user = User.find(params[:id])
     @user.update(user_params)
     @user.update_friends(user_name, e)
-
-user_rel_params = rel_params
-@user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
-
-@user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user)
-
-binding.pry
-
-# amount  = amount_params
-# lender_id = current_user.id
-# borrower_id = friend_id
-
-    flash[:message] = "Added Friends Successfully"
-
-    redirect_to root_path
+    user_rel_params = rel_params
+    @user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
+    @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+    if !@user.flash_notice.blank?
+      redirect_to (:back)
+    else
+      flash[:message] = "Added Friends Successfully"
+      redirect_to root_path
+    end
   end
 
 
