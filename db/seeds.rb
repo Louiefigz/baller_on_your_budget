@@ -78,3 +78,8 @@ Friendship.create(user_id: user_2, friend_id: user_4)
 Friendship.create(user_id: user_2, friend_id: user_3)
 Friendship.create(user_id: user_3, friend_id: user_4)
 Friendship.create(user_id: user_3, friend_id: user_5)
+
+Relationship.create(description: "friend")
+Relationship.create(description: "Great Lender")
+Relationship.create(description: "Great Borrower")
+Relationship.create(description: "Best Friend")
