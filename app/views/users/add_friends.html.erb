@@ -13,10 +13,10 @@
 <%= relationship.hidden_field :friend_id, value: @user.id %>
 <%= relationship.hidden_field :user_id, value: current_user.id %>
 <% end %><br><br>
+<%= f.collection_check_boxes :friend_ids, User.all, :id, :name %>
 
 <h4>Find your friends! </h4>
-  <%= f.fields_for :friends_attributes do |u| %>
-  <%= u.collection_check_boxes :friend_ids, User.all, :id, :name %>
+  <%= f.fields_for :friends_attributes, @user.friends.build do |u| %>
 <h5>Would you like to lend them money? (Optional): </h5>
   <%=f.fields_for :transactions, Transaction.new do |transaction|%>
   <%= transaction.text_field :amount%>
@@ -30,6 +30,8 @@
   <%= f.fields_for :users, User.new do |user| %>
   <%= user.label :name %>
   <%= user.text_field :name %>
+  <%= user.label :email%>
+  <%= user.text_field :email%>
   <%= f.submit "Add Friend" %>
   <% end %>
 <% end %>

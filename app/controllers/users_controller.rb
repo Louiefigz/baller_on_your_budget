@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
     if !@user.flash_notice.blank?
           flash[:notice] = @user.flash_notice
-        
+
        end
   end
 
@@ -77,6 +77,7 @@ class UsersController < ApplicationController
   end
 
   def update
+    binding.pry
     number = Random.rand(10000000)
     letters = [*('A'..'Z')].sample(8).join
     user_name = params[:user][:users][:name]
@@ -86,7 +87,7 @@ class UsersController < ApplicationController
     @user.update_friends(user_name, e)
     user_rel_params = rel_params
     @user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
-    @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+    # @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else
@@ -105,8 +106,13 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:friends_attributes => [:friend_ids=>[]], users_attributes: [:name])
+    params.require(:user).permit(:friend_ids=>[], users_attributes: [:name])
   end
+# @user.update(name:"Avidor")
+# @user.name = "Avidor"
+
+# @user.update(friends_attributes:{friend_ids:[1,2,3,4,5]})
+# @user.friends_attributes = {friend_ids:[1,2,3,4,5]}
 
   def drop_params
     params.require(:description).permit(:relationship_id)
