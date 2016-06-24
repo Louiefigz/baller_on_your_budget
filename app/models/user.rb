@@ -186,6 +186,7 @@ def create_this_transaction(current_user, friend, amount_params)
 end
 
 def setting_default_relationship(drop_params)
+  # This is a safe guard to make sure that there will always be a default relationship status.
   if drop_params[:relationship_id].to_i != 0
     word = drop_params[:relationship_id].to_i
   else
@@ -199,27 +200,47 @@ def setting_relationship_variable(current_user, new_user_info, new_word)
   new_friend_relationship.update(relationship: new_word.description)
 end
 
-
-def creating_relationship_transaction_friend(user_name, rel_params, drop_params, amount_params, current_user )
+# below isntance method is being called from the update_relationship route from users_controller.
+def creating_relationship_transaction_friend(user_name, rel_params, drop_params, amount_params, current_user)
+  # If we are adding a new friend object.
   if user_name != ""
+    #&& if there is no description (meaning if the user choose a relationship from drop down box or nothing at all)
     if rel_params[:description] == ""
-    word = self.setting_default_relationship(drop_params)
-    new_user_info = User.last.id
-    new_word = Relationship.find(word)
-    self.setting_relationship_variable(current_user, new_user_info, new_word)
-    self.create_this_transaction(current_user, new_user_info, amount_params)
+        #setting a default status if none was chosen.
+      word = self.setting_default_relationship(drop_params)
+      # Taking the last user object created and setting the relationship status.  We are going to make sure that the Friendship status
+      # is equal to the word.
+      new_user_info = User.last.id
+      new_word = Relationship.find(word)
+      self.setting_relationship_variable(current_user, new_user_info, new_word)
+      # if the transaction is not zero, we're going to add money to that persons account.
+      self.create_this_transaction(current_user, new_user_info, amount_params)
+    else
+      # if we are creating a friend && we are creating a new relationship status object in the text field..
+      self.new_relationship_create_transaction(drop_params, rel_params, current_user, amount_params)
     end
   else
+    binding.pry
+    # If we are not creating a new friend here && there was a new description written in the text field.
+    # this means we are going to create that new word in the Relationship table.
     if rel_params[:description] != ""
-      self.setting_default_relationship(drop_params)
-      new_word =Relationship.find_or_create_by(description: rel_params[:description])
-      new_user_info = User.last.id
-
-      self.setting_relationship_variable(current_user, new_user_info, new_word)
-      friend_id = User.last.id
-      self.create_this_transaction(current_user, friend_id, amount_params)
+      self.new_relationship_create_transaction(drop_params, rel_params, current_user, amount_params)
     end
   end
+end
+
+def new_relationship_create_transaction(drop_params, rel_params, current_user, amount_params)
+  # setting the default relationship if one was not assigned from the drop down box
+  self.setting_default_relationship(drop_params)
+  # Here we are making sure that the text input finds or creates the word to prevent a duplicate object.
+  new_word =Relationship.find_or_create_by(description: rel_params[:description])
+  new_user_info = User.last.id
+  #setting the relationship in the friendship table here.
+  self.setting_relationship_variable(current_user, new_user_info, new_word)
+  # I renamed the friend_id here again to match what the arguments were looking for.
+  friend_id = User.last.id
+  # If there was a transaction set,  the next line adds money to the account.
+  self.create_this_transaction(current_user, friend_id, amount_params)
 end
 
 def update_relationship_variable(word, friend)
@@ -231,7 +252,6 @@ end
 def create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
     word = self.setting_default_relationship(drop_params)
     # User did not give a relationship description
-    binding.pry 
     if rel_params[:description] == ""
 
       binding.pry

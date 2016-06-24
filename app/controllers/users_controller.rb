@@ -81,17 +81,23 @@ class UsersController < ApplicationController
   end
 
 
-# This should just manipulates the data from the Add_friend form.
+# This controller route just manipulates the data from the Add_friend form since it is extensive.
+# It is used as a POST request.
   def update_relationship
 
+    # The following 4 local variables are to account for creating a false validation of a new user
+    # currently Devise gem does not create a new user without valid email and password.
+    # the numbers and letters are randomly generated to create the email. This means that we are not able to Access
+    # the users, we are only able to create them here.
     number = Random.rand(10000000)
     letters = [*('A'..'Z')].sample(8).join
     user_name = params[:user][:users][:name]
-
-    e = params[:user][:users][:email]
     e = "#{number}#{letters}@gmail.com"
     @user = User.find(params[:id])
+    # The User params are updating the friend_ids collection.  Updating the Users current friends.
     @user.update(user_params)
+    # the method below handles creating a new User object if the current user is creating a new friend and
+    #adding them to their friends list. Again, Devise requires an email and password that we are falsely generating here.
     @user.update_friends(user_name, e)
     user_rel_params = rel_params
     @user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
