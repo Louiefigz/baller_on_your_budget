@@ -2,7 +2,7 @@
 <h2>Adding new friends</h2>
 
 
-<%= form_for @user, :url => update_relationship_path, :html => {:method => :post} do |f| %>
+<%= form_for @user, :url => parse_form_data_path, :html => {:method => :post} do |f| %>
 
 <h4>How close are you to these people?  Use the drop down box or create a unique relationship</h4>
 

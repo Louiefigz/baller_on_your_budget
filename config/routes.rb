@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   end
 
-post '/users/:id/update_relationship', to: 'users#update_relationship', as:'update_relationship'
+post '/users/:id/parse_add_friend_form_data', to: 'users#parse_add_friend_form_data', as:'parse_form_data'
 
 
   resources :transactions, only: [:create, :new, :index]
