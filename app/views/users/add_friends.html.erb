@@ -11,8 +11,7 @@
 <%=select("description", "relationship_id", @relationships.collect {|r| [ r.description, r.id ] }, { :include_blank => true })%>
 <%= relationship.label :description %>
 <%= relationship.text_field :description %>
-<%= relationship.hidden_field :friend_id, value: @user.id %>
-<%= relationship.hidden_field :user_id, value: current_user.id %>
+
 <% end %><br><br>
 
 <h4>Find your friends! </h4>
@@ -20,7 +19,7 @@
 <!-- create a way that it searches for everyone who is not your friends. POssibly have to do a loop. -->
  <!-- User.all.pluck(:id) - Self.friend_ids gives me the value I want to substitute for User.all below. -->
 
-<%= f.collection_check_boxes :friend_ids, User.where.not(id: current_user.friend_ids) , :id, :name %>
+<%= f.collection_check_boxes :friend_ids, @minus_current_friends , :id, :name %>
 
 <h5>Would you like to lend them money? (Optional): </h5>
   <%=f.fields_for :transactions, Transaction.new do |transaction|%>
