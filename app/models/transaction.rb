@@ -54,3 +54,14 @@ class Transaction < ActiveRecord::Base
 
 
 end
+
+
+# def balances 
+#   friends.map do |friend|
+#     lended_amount = borrowers.where(borrower_id: friend.id).pluck(:amount).sum
+#     borrowed_amount = lenders.where(lender_id: friend.id).pluck(:amount).sum
+#
+#     lended_amount - borrowed_amount
+#
+#   end
+# end

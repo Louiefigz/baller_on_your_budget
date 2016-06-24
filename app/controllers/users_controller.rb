@@ -77,17 +77,25 @@ class UsersController < ApplicationController
   end
 
   def update
-    binding.pry
+
+  end
+
+
+# This should just manipulates the data from the Add_friend form.
+  def update_relationship
+
     number = Random.rand(10000000)
     letters = [*('A'..'Z')].sample(8).join
     user_name = params[:user][:users][:name]
+
+    e = params[:user][:users][:email]
     e = "#{number}#{letters}@gmail.com"
     @user = User.find(params[:id])
     @user.update(user_params)
     @user.update_friends(user_name, e)
     user_rel_params = rel_params
     @user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
-    # @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+    @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else

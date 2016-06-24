@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   attr_accessor :flash_notice
 
 
-  accepts_nested_attributes_for :friends
+  # accepts_nested_attributes_for :friends
 
   # def friends_attributes=(attributes)
   #
@@ -43,8 +43,10 @@ class User < ActiveRecord::Base
   #   self.friends.uniq
   # end
 
-
-
+  #
+  # def not_friends
+  #   User.all.pluck(:id) - friend_ids
+  # end
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -62,18 +64,18 @@ class User < ActiveRecord::Base
     self.balance + money
   end
 
-    def total_borrowed_from(lender_id)
-      borrowed.where(lender_id: lender_id).sum(:amount)
-    end
-
-    def total_lended(borrower_id)
-      lent_out.where(borrower_id: borrower_id).sum(:amount)
-    end
-
+    # def total_borrowed_from(lender_id)
+    #   borrowed.where(lender_id: lender_id).sum(:amount)
+    # end
+    #
+    # def total_lended(borrower_id)
+    #   lent_out.where(borrower_id: borrower_id).sum(:amount)
+    # end
+    #
     def unique_lenders
       lenders.distinct
     end
-
+    #
     def unique_borrowers
       borrowers.distinct
     end
@@ -158,10 +160,15 @@ def friend_relationship(current_user, friend_id)
 end
 
 def update_friends(user_name, e)
-  if user_name !=""
-    person = User.new(name:user_name.strip, email: e)
-    person.save(validate:false)
-    new_friend =Friendship.create(user_id:self.id, friend_id:person.id)
+  if user_name !="" && e !=""
+
+    if existing_user = User.find_by(name: user_name.strip)
+      Friendship.find_or_create_by(user_id: self.id, friend_id: existing_user.id)
+    else
+      person = User.new(name:user_name.strip, email: e)
+      person.save(validate:false)
+      new_friend =Friendship.create(user_id:self.id, friend_id:person.id)
+    end
   end
 end
 
@@ -220,18 +227,23 @@ def update_relationship_variable(word, friend)
   friend.update(relationship: new_word.description)
 end
 
-
+# Comes from UsersController #update
 def create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
     word = self.setting_default_relationship(drop_params)
+    # User did not give a relationship description
+    binding.pry 
     if rel_params[:description] == ""
 
+      binding.pry
       if friend_params[:friend_id] != friend_params[:user_id]
         friend = Friendship.find_or_create_by(friend_params)
 
         self.update_relationship_variable(word, friend)
 
       end
-      user_params[:friends_attributes][:friend_ids].each do |friend_att|
+
+
+      user_params[:friend_ids].each do |friend_att|
         if friend_att != ""
           friend = User.find(friend_att)
           set_friend = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
@@ -243,7 +255,7 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
     else
       new_word =Relationship.find_or_create_by(description: rel_params[:description])
 
-      user_params[:friends_attributes][:friend_ids].each do |friend_att|
+      user_params[:friend_ids].each do |friend_att|
 
         if friend_att != ""
           friend = User.find(friend_att)
@@ -259,6 +271,8 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
     end
   end
 end
+
+
 
 
 
