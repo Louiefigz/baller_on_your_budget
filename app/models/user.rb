@@ -23,25 +23,31 @@ class User < ActiveRecord::Base
 
   attr_accessor :flash_notice
 
-
-  # accepts_nested_attributes_for :friends
-
-  # def friends_attributes=(attributes)
   #
-  # attributes["friend_ids"].each do |attribute|
-  #   if attribute != ""
-  #    friend = User.find_or_create_by(id: attribute)
-  #       if !self.friends.include?(friend)
-  #         self.friends << friend
-  #       end
-  #     end
-  #  end
-  #  self.save
+  # def keep_friends
+  #   binding.pry
   # end
-  #
-  # def friends_attributes
-  #   self.friends.uniq
-  # end
+
+
+
+
+  def friend_ids=(attributes)
+    # I need this custom attr because without it, the friends that were previously saved are not appended to the new
+    # friends that are added in the add_friend form.
+  attributes.each do |attribute|
+    if attribute != ""
+     friend = User.find(attribute)
+        if !self.friends.include?(friend)
+          self.friends << friend
+        end
+      end
+   end
+   self.save
+  end
+
+  def friends_attributes
+    self.friends.uniq
+  end
 
   #
   # def not_friends
@@ -251,26 +257,30 @@ def update_relationship_variable(word, friend)
   friend.update(relationship: new_word.description)
 end
 
-
+# change this name to existing users instead of existing friends.
 def create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+  # This method is here to help create friendships with users that are in our database.
+  # We are also iterating through the friend ids, making sure that they are given either a default relationship status or a new object,
+  # Lastly, we are creating a transaction with those friends.
+
     word = self.setting_default_relationship(drop_params)
-    # User did not give a relationship description
+    # User did not give a relationship description(we're going to assign a default or the user chose a word from the drop down box)
     if rel_params[:description] == ""
-      # there is a possibility that you can choose yourself. 
-      if friend_params[:friend_id] != friend_params[:user_id]
-        friend = Friendship.find_or_create_by(friend_params)
 
-        self.update_relationship_variable(word, friend)
+      # we are creating this friendship here.
+        # friend = Friendship.create(friend_params)
+        # self.update_relationship_variable(word, friend)
 
-      end
-
+        # the friend_ids are the attributes displayed in the params.
 
       user_params[:friend_ids].each do |friend_att|
+
         if friend_att != ""
           friend = User.find(friend_att)
           set_friend = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
           self.update_relationship_variable(word, set_friend)
           friend = friend.id
+
           self.create_this_transaction(current_user, friend, amount_params)
         end
       end
