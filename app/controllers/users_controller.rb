@@ -89,19 +89,21 @@ class UsersController < ApplicationController
     # currently Devise gem does not create a new user without valid email and password.
     # the numbers and letters are randomly generated to create the email. This means that we are not able to Access
     # the users, we are only able to create them here.
-    number = Random.rand(10000000)
-    letters = [*('A'..'Z')].sample(8).join
-    user_name = params[:user][:users][:name]
-    e = "#{number}#{letters}@gmail.com"
+
     @user = User.find(params[:id])
+    # @user.update(user_params)
+    user_name = params[:user][:users][:name]
+    user_rel_params = rel_params
+    @user.parse_add_form_data(user_params, user_name, rel_params, drop_params, amount_params, current_user, friend_params, user_rel_params)
+
+
+
     # The User params are updating the friend_ids collection.  Updating the Users current friends.
-    @user.update(user_params)
     # the method below handles creating a new User object if the current user is creating a new friend and
     #adding them to their friends list. Again, Devise requires an email and password that we are falsely generating here.
-    @user.update_friends(user_name, e)
-    user_rel_params = rel_params
-    @user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
-    @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+    # @user.update_friends(user_name, e)
+    # @user.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
+    # @user.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else

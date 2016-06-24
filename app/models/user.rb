@@ -31,23 +31,7 @@ class User < ActiveRecord::Base
 
 
 
-  def friend_ids=(attributes)
-    # I need this custom attr because without it, the friends that were previously saved are not appended to the new
-    # friends that are added in the add_friend form.
-  attributes.each do |attribute|
-    if attribute != ""
-     friend = User.find(attribute)
-        if !self.friends.include?(friend)
-          self.friends << friend
-        end
-      end
-   end
-   self.save
-  end
 
-  def friends_attributes
-    self.friends.uniq
-  end
 
   #
   # def not_friends
@@ -159,13 +143,28 @@ def return_json
     return_val
 end
 
-def friend_relationship(current_user, friend_id)
 
-  rel = Friendship.find_by(user_id: current_user, friend_id: friend_id)
-  rel.relationship
+################## update_relationship Table from UsersController. ########
+
+
+
+def friend_ids=(attributes)
+  # I need this custom attr because without it, the friends that were previously saved are not appended to the new
+  # friends that are added in the add_friend form.
+attributes.each do |attribute|
+  if attribute != ""
+   friend = User.find(attribute)
+      if !self.friends.include?(friend)
+        self.friends << friend
+      end
+    end
+ end
+ self.save
 end
 
-## update_relationship Table from UsersController. ##
+def friends_attributes
+  self.friends.uniq
+end
 
 
 def update_friends(user_name, e)
@@ -201,6 +200,12 @@ def setting_default_relationship(drop_params)
     word = 1
   end
   word
+end
+
+def friend_relationship(current_user, friend_id)
+  # responsible to only return that relationship
+  rel = Friendship.find_by(user_id: current_user, friend_id: friend_id)
+  rel.relationship
 end
 
 def setting_relationship_variable(current_user, new_user_info, new_word)
@@ -266,42 +271,41 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
     word = self.setting_default_relationship(drop_params)
     # User did not give a relationship description(we're going to assign a default or the user chose a word from the drop down box)
     if rel_params[:description] == ""
-
-      # we are creating this friendship here.
-        # friend = Friendship.create(friend_params)
-        # self.update_relationship_variable(word, friend)
-
-        # the friend_ids are the attributes displayed in the params.
-
+        # We are looping through and assigning the friends in the params to have the appropriate relationship status and transaction.
       user_params[:friend_ids].each do |friend_att|
-
         if friend_att != ""
           friend = User.find(friend_att)
           set_friend = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
           self.update_relationship_variable(word, set_friend)
           friend = friend.id
-
           self.create_this_transaction(current_user, friend, amount_params)
         end
       end
     else
+      # Here the text box is filled in and we are creating that object here.
       new_word =Relationship.find_or_create_by(description: rel_params[:description])
-
       user_params[:friend_ids].each do |friend_att|
-
+        # We now want to set the friends to have that relationship status object and then do the transaction.
         if friend_att != ""
           friend = User.find(friend_att)
-          if friend.id != current_user.id
-
             set_relationship = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
             set_relationship.update(relationship: new_word.description)
             friend = friend.id
-
             self.create_this_transaction(current_user, friend, amount_params)
-        end
       end
     end
   end
+end
+
+def parse_add_form_data(user_params, user_name, rel_params, drop_params, amount_params, current_user, friend_params, user_rel_params)
+  number = Random.rand(10000000)
+  letters = [*('A'..'Z')].sample(8).join
+  # user_name = params[:user][:users][:name]
+  e = "#{number}#{letters}@gmail.com"
+  self.update(user_params)
+  self.update_friends(user_name, e)
+  self.creating_relationship_transaction_friend(user_name, user_rel_params, drop_params, amount_params, current_user )
+  self.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
 end
 
 
