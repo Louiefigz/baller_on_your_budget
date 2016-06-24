@@ -88,7 +88,7 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
     user_name = params[:user][:users][:name]
-    @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user, friend_params, rel_params)
+    @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user,  rel_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else
@@ -119,9 +119,9 @@ private
     params.require(:description).permit(:relationship_id)
   end
 
-  def friend_params
-    params.require(:user)[:relationships].permit(:friend_id, :user_id)
-  end
+  # def friend_params
+  #   params.require(:user)[:relationships].permit(:friend_id, :user_id)
+  # end
   def rel_params
     params.require(:user)[:relationships].permit(:description)
   end

@@ -39,8 +39,9 @@ ActiveRecord::Schema.define(version: 20160624174719) do
 
   create_table "relationships", force: :cascade do |t|
     t.string   "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "friendship_id"
   end
 
   create_table "transactions", force: :cascade do |t|

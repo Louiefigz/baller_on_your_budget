@@ -206,13 +206,16 @@ end
 def friend_relationship(current_user, friend_id)
   # responsible to only return that relationship
   friendship = Friendship.find_by(user_id: current_user, friend_id: friend_id)
+  if friendship.relationship == nil
+     friendship.update(relationship_id: 1)
+  end
   friendship.relationship.description
 end
 
 def setting_relationship_variable(current_user, new_user_info, word)
   # Here we are making the relationship either created or set from the drop down box equal to the
   #Friendship table status.
-  new_friend_relationship = Friendship.find_by(user_id: current_user.id, friend_id: new_user_info)
+  new_friend_relationship = Friendship.find_or_create_by(user_id: current_user.id, friend_id: new_user_info)
   new_friend_relationship.update(relationship_id: word)
 end
 
@@ -221,6 +224,7 @@ def creating_relationship_transaction_friend(user_name, rel_params, drop_params,
   # If we are adding a new friend object.
   if user_name != ""
     #&& if there is no description (meaning if the user choose a relationship from drop down box or nothing at all)
+
     if rel_params[:description] == ""
         #setting a default status if none was chosen.
       word = self.setting_default_relationship(drop_params)
@@ -246,12 +250,13 @@ end
 
 def new_relationship_create_transaction(drop_params, rel_params, current_user, amount_params)
   # setting the default relationship if one was not assigned from the drop down box
+
   self.setting_default_relationship(drop_params)
   # Here we are making sure that the text input finds or creates the word to prevent a duplicate object.
-  new_word =Relationship.find_or_create_by(description: rel_params[:description])
+  word =Relationship.find_or_create_by(description: rel_params[:description])
   new_user_info = User.last.id
   #setting the relationship in the friendship table here.
-  self.setting_relationship_variable(current_user, new_user_info, new_word)
+  self.setting_relationship_variable(current_user, new_user_info, word.id)
   # I renamed the friend_id here again to match what the arguments were looking for.
   friend_id = User.last.id
   # If there was a transaction set,  the next line adds money to the account.
@@ -264,7 +269,7 @@ def update_relationship_variable(word, friend)
 end
 
 # change this name to existing users instead of existing friends.
-def create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+def create_attributes_with_existing_friends(drop_params, rel_params, user_params, current_user, amount_params)
   # This method is here to help create friendships with users that are in our database.
   # We are also iterating through the friend ids, making sure that they are given either a default relationship status or a new object,
   # Lastly, we are creating a transaction with those friends.
@@ -274,6 +279,7 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
     if rel_params[:description] == ""
         # We are looping through and assigning the friends in the params to have the appropriate relationship status and transaction.
       user_params[:friend_ids].each do |friend_att|
+
         if friend_att != ""
           friend = User.find(friend_att)
           set_friend = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
@@ -284,13 +290,15 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
       end
     else
       # Here the text box is filled in and we are creating that object here.
+
       new_word =Relationship.find_or_create_by(description: rel_params[:description])
       user_params[:friend_ids].each do |friend_att|
         # We now want to set the friends to have that relationship status object and then do the transaction.
         if friend_att != ""
           friend = User.find(friend_att)
             set_relationship = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
-            set_relationship.update(relationship_id: word)
+
+            set_relationship.update(relationship_id: new_word.id)
             friend = friend.id
             self.create_this_transaction(current_user, friend, amount_params)
       end
@@ -298,7 +306,7 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
   end
 end
 
-def parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user, friend_params, rel_params)
+def parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user, rel_params)
   # The following 3 local variables are to account for creating a false validation of a new user
   # currently Devise gem does not create a new user without valid email and password.
   # the numbers and letters are randomly generated to create the email. This means that we are not able to Access
@@ -314,7 +322,7 @@ def parse_add_form_data(user_params, user_name, drop_params, amount_params, curr
   # responsible to fire when we are creating a new friend. (creating new object of a user, Creating Friendship object, Creating Relationship, creating transaction.)
   self.creating_relationship_transaction_friend(user_name, rel_params, drop_params, amount_params, current_user )
   # responsible to fire to update the friends in the collection boxes. (Creating Friendship, creating Relationship, creating transaction for each instance of a friend.)
-  self.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
+  self.create_attributes_with_existing_friends(drop_params, rel_params, user_params, current_user, amount_params)
 end
 
 end
