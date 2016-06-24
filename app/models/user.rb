@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
   #
   # def keep_friends
-  #   binding.pry
+  #
   # end
 
 
@@ -195,6 +195,7 @@ end
 def setting_default_relationship(drop_params)
   # This is a safe guard to make sure that there will always be a default relationship status.
   if drop_params[:relationship_id].to_i != 0
+
     word = drop_params[:relationship_id].to_i
   else
     word = 1
@@ -204,15 +205,15 @@ end
 
 def friend_relationship(current_user, friend_id)
   # responsible to only return that relationship
-  rel = Friendship.find_by(user_id: current_user, friend_id: friend_id)
-  rel.relationship
+  friendship = Friendship.find_by(user_id: current_user, friend_id: friend_id)
+  friendship.relationship.description
 end
 
-def setting_relationship_variable(current_user, new_user_info, new_word)
+def setting_relationship_variable(current_user, new_user_info, word)
   # Here we are making the relationship either created or set from the drop down box equal to the
   #Friendship table status.
   new_friend_relationship = Friendship.find_by(user_id: current_user.id, friend_id: new_user_info)
-  new_friend_relationship.update(relationship: new_word.description)
+  new_friend_relationship.update(relationship_id: word)
 end
 
 
@@ -226,8 +227,8 @@ def creating_relationship_transaction_friend(user_name, rel_params, drop_params,
       # Taking the last user object created and setting the relationship status.  We are going to make sure that the Friendship status
       # is equal to the word.
       new_user_info = User.last.id
-      new_word = Relationship.find(word)
-      self.setting_relationship_variable(current_user, new_user_info, new_word)
+      # new_word = Relationship.find(word)
+      self.setting_relationship_variable(current_user, new_user_info, word)
       # if the transaction is not zero, we're going to add money to that persons account.
       self.create_this_transaction(current_user, new_user_info, amount_params)
     else
@@ -258,9 +259,8 @@ def new_relationship_create_transaction(drop_params, rel_params, current_user, a
 end
 
 def update_relationship_variable(word, friend)
-  binding.pry
-  new_word = Relationship.find(word)
-  friend.update(relationship: new_word.description)
+
+  friend.update(relationship_id: word)
 end
 
 # change this name to existing users instead of existing friends.
@@ -290,7 +290,7 @@ def create_attributes_with_existing_friends(drop_params, rel_params, friend_para
         if friend_att != ""
           friend = User.find(friend_att)
             set_relationship = Friendship.find_or_create_by(friend_id: friend.id, user_id: current_user.id)
-            set_relationship.update(relationship: new_word.description)
+            set_relationship.update(relationship_id: word)
             friend = friend.id
             self.create_this_transaction(current_user, friend, amount_params)
       end

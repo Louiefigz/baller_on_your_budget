@@ -8,7 +8,7 @@ class Friendship < ActiveRecord::Base
     after_create :set_relationship
 
     def find_all_friendships
-      binding.pry
+
         u=User.find(self.friend_id)
         if !u.friends.include?(User.find(self.user_id))
           u.friends << User.find(self.user_id)
@@ -17,8 +17,8 @@ class Friendship < ActiveRecord::Base
     end
 
     def set_relationship
-
-      self.relationship = "just a regular friend"
+    
+      self.relationship_id = 1
       self.save
     end
 

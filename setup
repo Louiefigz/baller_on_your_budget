@@ -64,7 +64,7 @@ Note
             trans.sum(:amount)
           end
 
-          <%binding.pry%>
+          <%  %>
           <%= @user.borrowed.each do |transaction|%>
             if current_user.lender_ids.include?(transaction.lender_id)
               transaction.amount

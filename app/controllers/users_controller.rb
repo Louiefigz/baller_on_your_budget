@@ -84,6 +84,7 @@ class UsersController < ApplicationController
 # This controller route just manipulates the data from the Add_friend form since it is extensive.
 # It is used as a POST request.
   def parse_add_friend_form_data
+
     @user = User.find(params[:id])
     user_name = params[:user][:users][:name]
     @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user, friend_params, rel_params)
