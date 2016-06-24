@@ -159,9 +159,12 @@ def friend_relationship(current_user, friend_id)
   rel.relationship
 end
 
-def update_friends(user_name, e)
-  if user_name !="" && e !=""
+## update_relationship Table from UsersController. ##
 
+
+def update_friends(user_name, e)
+  # Here we are tricking Devise into creating a new object of a user and  creating a friendship table
+  if user_name !="" && e !=""
     if existing_user = User.find_by(name: user_name.strip)
       Friendship.find_or_create_by(user_id: self.id, friend_id: existing_user.id)
     else
@@ -174,13 +177,12 @@ end
 
 
 def create_this_transaction(current_user, friend, amount_params)
+  #transactions are optional in the add_friend form.  If the value comes back greater than 0. We are going to create a lending transaction.
   if amount_params != "" && amount_params != "0"
     @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend, amount: amount_params)
-
     if @transaction.save
     else
       self.flash_notice = @transaction.errors.full_messages[0]
-
     end
   end
 end
@@ -196,11 +198,13 @@ def setting_default_relationship(drop_params)
 end
 
 def setting_relationship_variable(current_user, new_user_info, new_word)
+  # Here we are making the relationship either created or set from the drop down box equal to the
+  #Friendship table status.
   new_friend_relationship = Friendship.find_by(user_id: current_user.id, friend_id: new_user_info)
   new_friend_relationship.update(relationship: new_word.description)
 end
 
-# below isntance method is being called from the update_relationship route from users_controller.
+
 def creating_relationship_transaction_friend(user_name, rel_params, drop_params, amount_params, current_user)
   # If we are adding a new friend object.
   if user_name != ""
@@ -220,7 +224,6 @@ def creating_relationship_transaction_friend(user_name, rel_params, drop_params,
       self.new_relationship_create_transaction(drop_params, rel_params, current_user, amount_params)
     end
   else
-    binding.pry
     # If we are not creating a new friend here && there was a new description written in the text field.
     # this means we are going to create that new word in the Relationship table.
     if rel_params[:description] != ""
@@ -248,13 +251,12 @@ def update_relationship_variable(word, friend)
   friend.update(relationship: new_word.description)
 end
 
-# Comes from UsersController #update
+
 def create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
     word = self.setting_default_relationship(drop_params)
     # User did not give a relationship description
     if rel_params[:description] == ""
-
-      binding.pry
+      # there is a possibility that you can choose yourself. 
       if friend_params[:friend_id] != friend_params[:user_id]
         friend = Friendship.find_or_create_by(friend_params)
 

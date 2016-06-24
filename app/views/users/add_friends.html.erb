@@ -17,10 +17,10 @@
 
 <h4>Find your friends! </h4>
 
-# create a way that it searches for everyone who is not your friends. POssibly have to do a loop.
-# User.all.pluck(:id) - Self.friend_ids gives me the value I want to substitute for User.all below.
+<!-- create a way that it searches for everyone who is not your friends. POssibly have to do a loop. -->
+ <!-- User.all.pluck(:id) - Self.friend_ids gives me the value I want to substitute for User.all below. -->
 
-<%= f.collection_check_boxes :friend_ids, User.all , :id, :name %>
+<%= f.collection_check_boxes :friend_ids, User.where.not(id: current_user.friend_ids) , :id, :name %>
 
 <h5>Would you like to lend them money? (Optional): </h5>
   <%=f.fields_for :transactions, Transaction.new do |transaction|%>
