@@ -1,4 +1,4 @@
 class Relationship < ActiveRecord::Base
-  belongs_to :friendship
+  has_many :friendships
 
 end

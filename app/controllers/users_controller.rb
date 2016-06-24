@@ -105,7 +105,7 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:friend_ids=>[], users_attributes: [:name])
+    params.require(:user).permit(:friend_ids=>[])
   end
 # @user.update(name:"Avidor")
 # @user.name = "Avidor"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160603180157) do
+ActiveRecord::Schema.define(version: 20160624174719) do
 
   create_table "credits", force: :cascade do |t|
     t.integer  "amount",      default: 0
@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(version: 20160603180157) do
   create_table "friendships", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "friend_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.string   "relationship"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "relationship_id"
   end
 
   create_table "relationships", force: :cascade do |t|

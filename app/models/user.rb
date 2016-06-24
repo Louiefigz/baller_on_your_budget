@@ -144,7 +144,7 @@ def return_json
 end
 
 
-################## update_relationship Table from UsersController. ########
+################## Parse Add Friend Form data from UsersController. ########
 
 
 
@@ -258,6 +258,7 @@ def new_relationship_create_transaction(drop_params, rel_params, current_user, a
 end
 
 def update_relationship_variable(word, friend)
+  binding.pry
   new_word = Relationship.find(word)
   friend.update(relationship: new_word.description)
 end
@@ -315,15 +316,5 @@ def parse_add_form_data(user_params, user_name, drop_params, amount_params, curr
   # responsible to fire to update the friends in the collection boxes. (Creating Friendship, creating Relationship, creating transaction for each instance of a friend.)
   self.create_attributes_with_existing_friends(drop_params, rel_params, friend_params, user_params, current_user, amount_params)
 end
-
-
-
-
-
-
-  #   if self.lender_ids.include?(lender.to_i)
-  #     lender = User.find(lender.to_i)
-  #   end
-  # end
 
 end
