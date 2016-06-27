@@ -1,5 +1,11 @@
-<p>Welcome <%= @email %>!</p>
+<!-- ## This code here is modified because I wanted to set a temporary password for when a user is inviting a friend to the site.
+## This is not as useful nor is it efficient enough. The purpose is to make the mailer send first and then refactor. -->
+
+
+<p>Welcome <%= @email %>! It looks like your friend would like to invite you to Baller on a budget!</p>
+
+<p>Your temporary password is: 12345678</p>
 
 <p>You can confirm your account email through the link below:</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<!-- <p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p> -->

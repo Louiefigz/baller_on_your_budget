@@ -45,6 +45,9 @@ group :development, :test do
   gem "omniauth-google-oauth2"
   gem 'active_model_serializers'
   gem 'dotenv-rails'
+  #The gem below lets me see if an email was sent and what it says. A new tab opens up and shows the email. Using with :confirmable.
+  #https://github.com/ryanb/letter_opener
+  # gem "letter_opener"
 end
 
 group :development do

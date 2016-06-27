@@ -148,7 +148,8 @@ end
 
 
 
-def friend_ids=(attributes)
+def add_friend_ids=(attributes)
+  binding.pry
   # I need this custom attr because without it, the friends that were previously saved are not appended to the new
   # friends that are added in the add_friend form.
 attributes.each do |attribute|
@@ -162,9 +163,7 @@ attributes.each do |attribute|
  self.save
 end
 
-def friends_attributes
-  self.friends.uniq
-end
+
 
 
 def update_friends(user_name, e)
@@ -198,7 +197,7 @@ def setting_default_relationship(drop_params)
 
     word = drop_params[:relationship_id].to_i
   else
-    word = 1
+    word = 68
   end
   word
 end
@@ -250,7 +249,6 @@ end
 
 def new_relationship_create_transaction(drop_params, rel_params, current_user, amount_params)
   # setting the default relationship if one was not assigned from the drop down box
-
   self.setting_default_relationship(drop_params)
   # Here we are making sure that the text input finds or creates the word to prevent a duplicate object.
   word =Relationship.find_or_create_by(description: rel_params[:description])

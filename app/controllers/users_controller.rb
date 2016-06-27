@@ -88,6 +88,7 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
     user_name = params[:user][:users][:name]
+    binding.pry
     @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user,  rel_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
@@ -107,7 +108,7 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:friend_ids=>[])
+    params.require(:user).permit(:add_friend_ids=>[])
   end
 # @user.update(name:"Avidor")
 # @user.name = "Avidor"

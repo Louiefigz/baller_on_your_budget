@@ -34,8 +34,8 @@
   <%= f.fields_for :users, User.new do |user| %>
   <%= user.label :name %>
   <%= user.text_field :name %><br>
-  <%= user.label :email%>
-  <%= user.text_field :email %>
+  <!-- <%= user.label :email%>
+  <%= user.text_field :email %> -->
   <%= f.submit "Add Friend" %>
   <% end %>
 <% end %>

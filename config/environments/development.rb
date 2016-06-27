@@ -1,4 +1,18 @@
 Rails.application.configure do
+
+################### These Lines of code were here to make the mail sender work for confirmations. ###########
+# Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+# config.action_mailer.delivery_method = :letter_opener
+#
+# config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+# config.action_mailer.delivery_method = :smtp
+# config.action_mailer.smtp_settings = {:address => "localhost", :port => 1025}
+
+
+#############################################
+
+
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
