@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   has_many :friends, :through => :friendships
   has_many :relationships
 
+  #  accepts_nested_attributes_for :fr
+
 
   scope :lent_amount, -> { order ('lent_out DESC LIMIT 5') }
 
@@ -161,6 +163,10 @@ attributes.each do |attribute|
     end
  end
  self.save
+end
+
+def relationship_type
+  binding.pry
 end
 
 

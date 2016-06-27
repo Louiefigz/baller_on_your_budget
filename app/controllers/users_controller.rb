@@ -86,10 +86,12 @@ class UsersController < ApplicationController
 # It is used as a POST request.
   def parse_add_friend_form_data
 
+
     @user = User.find(params[:id])
-    user_name = params[:user][:users][:name]
+    # user_name = params[:user][:users][:name]
     binding.pry
-    @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user,  rel_params)
+      @user.update(user_params)
+    # @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user,  rel_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else

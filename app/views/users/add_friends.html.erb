@@ -6,9 +6,10 @@
 
 <h4>How close are you to these people?  Use the drop down box or create a unique relationship</h4>
 
-
-<%= f.fields_for :relationships, Relationship.new do |relationship| %>
-<%=select("description", "relationship_id", @relationships.collect {|r| [ r.description, r.id ] }, { :include_blank => true })%>
+<%=f.fields_for :add_friend_ids do |u|%>
+  <!-- <%=select("add_friends", "relationship_type", @relationships.collect {|r| [ r.description ] }, { :include_blank => true })%> -->
+  <%= u.collection_select :relationship_type, @relationships, :id, :name, include_blank: true %>
+<%= u.fields_for :relationships do |relationship| %>
 <%= relationship.label :description %>
 <%= relationship.text_field :description %>
 
@@ -17,25 +18,26 @@
 <h4>Find your friends! </h4>
 
 <!-- create a way that it searches for everyone who is not your friends. POssibly have to do a loop. -->
- <!-- User.all.pluck(:id) - Self.friend_ids gives me the value I want to substitute for User.all below. -->
+ <!-- User.all.pluck(:id) - Self.add_friend_ids gives me the value I want to substitute for User.all below. -->
 
-<%= f.collection_check_boxes :friend_ids, @minus_current_friends , :id, :name %>
+<%= u.collection_check_boxes :friend_ids, @minus_current_friends , :id, :name %>
 
 <h5>Would you like to lend them money? (Optional): </h5>
-  <%=f.fields_for :transactions, Transaction.new do |transaction|%>
+  <%=u.fields_for :transactions, Transaction.new do |transaction|%>
   <%= transaction.text_field :amount%>
 
   <br><%= f.submit "Add Friends"%>
+  <% end %>
 <% end %><br>
 
-
+<!--
 <h3>Add a friend that isnt here on this list with their name and email address</h3>
 
   <%= f.fields_for :users, User.new do |user| %>
   <%= user.label :name %>
-  <%= user.text_field :name %><br>
+  <%= user.text_field :name %><br> -->
   <!-- <%= user.label :email%>
   <%= user.text_field :email %> -->
-  <%= f.submit "Add Friend" %>
-  <% end %>
+  <!-- <%= f.submit "Add Friend" %>
+  <% end %> -->
 <% end %>
