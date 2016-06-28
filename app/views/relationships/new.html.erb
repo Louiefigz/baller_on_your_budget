@@ -1,7 +1,11 @@
+
+
+
 <%= form_for @relationship do |f| %>
+<%= f.fields_for :updated_relationship do |u|%>
 <%=select("description", "relationship_id", @relationships.collect {|r| [ r.description, r.id ] }, { :include_blank => true })%>
-  <%= f.label :description %>
-  <%= f.text_field :description %>
+  <%= u.label :description %>
+  <%= u.text_field :description %>
   <%= f.submit %>
 
 <% end %>

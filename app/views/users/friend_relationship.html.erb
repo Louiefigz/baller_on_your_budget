@@ -2,13 +2,16 @@
 
 
 <%= form_for @relationship do |f| %>
-<%=select("description", "relationship_id", @relationships.collect {|r| [ r.description, r.id ] }, { :include_blank => true })%>
+<%= f.fields_for :updated_relationship do |u|%>
+
+<%= u.collection_select :drop_down, @relationships, :id, :description,  include_blank: true %>
 
 
-<%= f.label :description %>
-<%= f.text_field :description %>
-<%= f.hidden_field :friend_id, value: @user.id %>
-<%= f.hidden_field :user_id, value: current_user.id %>
+<%= u.label :description %>
+<%= u.text_field :description %>
+<%= u.hidden_field :friend_id, value: @user.id %>
+<%= u.hidden_field :user_id, value: current_user.id %>
 
   <%=f.submit%>
+  <% end %>
 <% end %>

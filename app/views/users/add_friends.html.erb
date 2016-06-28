@@ -7,7 +7,7 @@
 <h4>How close are you to these people?  Use the drop down box or create a unique relationship</h4>
 
 <%=f.fields_for :add_friend_ids do |u|%>
-  <!-- <%=select("add_friends", "relationship_type", @relationships.collect {|r| [ r.description ] }, { :include_blank => true })%> -->
+  
 <%= u.fields_for :relationship_type do |relationship| %>
 <%= relationship.collection_select :drop_down, @relationships, :id, :description,  include_blank: true %>
 <%= relationship.label :description %>
