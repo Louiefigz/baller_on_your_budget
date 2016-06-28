@@ -12,7 +12,7 @@ class UsersController < ApplicationController
        end
   end
 
-@@email = 22
+
 
   def self.new_with_session(params, session)
     super.tap do |user|
@@ -85,11 +85,8 @@ class UsersController < ApplicationController
 # This controller route just manipulates the data from the Add_friend form since it is extensive.
 # It is used as a POST request.
   def parse_add_friend_form_data
-
     @user = User.find(params[:id])
-    # user_name = params[:user][:users][:name]
-      @user.update(user_params)
-    # @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user,  rel_params)
+    @user.update(user_params)
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else
@@ -109,25 +106,6 @@ private
 
   def user_params
     params.require(:user).permit(:add_friend_ids=>[:relationship_type=>[:description, :drop_down], :friend_ids=>[], :transactions=>[:amount]])
-  end
-# @user.update(name:"Avidor")
-# @user.name = "Avidor"
-
-# @user.update(friends_attributes:{friend_ids:[1,2,3,4,5]})
-# @user.friends_attributes = {friend_ids:[1,2,3,4,5]}
-
-  def drop_params
-    params.require(:description).permit(:relationship_id)
-  end
-
-  # def friend_params
-  #   params.require(:user)[:relationships].permit(:friend_id, :user_id)
-  # end
-  def rel_params
-    params.require(:user)[:relationships].permit(:description)
-  end
-  def amount_params
-    params.require(:user)[:transactions].permit(:amount)[:amount]
   end
 
 end
