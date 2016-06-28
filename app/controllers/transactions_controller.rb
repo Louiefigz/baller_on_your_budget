@@ -27,9 +27,6 @@ class TransactionsController < ApplicationController
     @transaction.error_message_check
     if @transaction.flash_notice.blank?
       @transaction.save
-      # @transaction.lender.update(balance: @transaction.lender.balance - @transaction.amount)
-      # @transaction.borrower.update(balance: @transaction.borrower.balance + @transaction.amount)
-
       redirect_to user_path(current_user), flash[:notice] => "Well it seems like she isn't eating for a few weeks"
     else
       # raise

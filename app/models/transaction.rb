@@ -20,15 +20,13 @@ class Transaction < ActiveRecord::Base
     borrower = User.find(self.borrower_id)
     if self.lending
       if lender.balance - self.amount < 0
-
         self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
-      else
+      end
+    else
         if borrower.balance - self.amount < 0
           self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
         end
       end
-    end
-
   end
 
   def update_debit_credit
@@ -40,26 +38,18 @@ class Transaction < ActiveRecord::Base
     c = Credit.find_or_create_by(lender_id: self.lender_id, borrower_id: self.borrower_id)
 
     if self.lending
-      if lender.balance - self.amount < 0
-        binding.pry
-        self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
-      else
+
         if lender.balance - self.amount >= 0
           d.amount += self.amount
           lender.update(balance: lender.balance - self.amount)
           borrower.update(balance: borrower.balance + self.amount)
         end
-      end
     else
-      if borrower.balance - self.amount < 0
-        self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
-      else
-          if borrower.balance - self.amount >= 0
-            c.amount += self.amount
-            lender.update(balance: lender.balance + self.amount)
-            borrower.update(balance: borrower.balance - self.amount)
-          end
-      end
+        if borrower.balance - self.amount >= 0
+          c.amount += self.amount
+          lender.update(balance: lender.balance + self.amount)
+          borrower.update(balance: borrower.balance - self.amount)
+        end
     end
     d.save
     c.save

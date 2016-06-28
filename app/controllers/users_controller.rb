@@ -5,10 +5,8 @@ class UsersController < ApplicationController
   after_filter :flash_notice
 
   def flash_notice
-
     if !@user.flash_notice.blank?
           flash[:notice] = @user.flash_notice
-
        end
   end
 
