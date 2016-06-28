@@ -89,7 +89,7 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
     # user_name = params[:user][:users][:name]
-    binding.pry
+
       @user.update(user_params)
     # @user.parse_add_form_data(user_params, user_name, drop_params, amount_params, current_user,  rel_params)
     if !@user.flash_notice.blank?
@@ -110,7 +110,7 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:add_friend_ids=>[])
+    params.require(:user).permit(:add_friend_ids=>[:relationship_type=>[:description], :friend_ids=>[], :transactions=>[:amount]])
   end
 # @user.update(name:"Avidor")
 # @user.name = "Avidor"
