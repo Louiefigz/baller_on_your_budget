@@ -9,8 +9,27 @@ class Transaction < ActiveRecord::Base
 
   scope :biggest, -> { order ('amount DESC LIMIT 5') }
 
+  attr_accessor :flash_notice
+
 
   after_create :update_debit_credit
+
+
+  def error_message_check
+    lender = User.find(self.lender_id)
+    borrower = User.find(self.borrower_id)
+    if self.lending
+      if lender.balance - self.amount < 0
+
+        self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
+      else
+        if borrower.balance - self.amount < 0
+          self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
+        end
+      end
+    end
+
+  end
 
   def update_debit_credit
 
@@ -21,18 +40,26 @@ class Transaction < ActiveRecord::Base
     c = Credit.find_or_create_by(lender_id: self.lender_id, borrower_id: self.borrower_id)
 
     if self.lending
-
-      if lender.balance - self.amount >= 0
-        d.amount += self.amount
-        lender.update(balance: lender.balance - self.amount)
-        borrower.update(balance: borrower.balance + self.amount)
+      if lender.balance - self.amount < 0
+        binding.pry
+        self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
+      else
+        if lender.balance - self.amount >= 0
+          d.amount += self.amount
+          lender.update(balance: lender.balance - self.amount)
+          borrower.update(balance: borrower.balance + self.amount)
+        end
       end
     else
-      if borrower.balance - self.amount >= 0
-        c.amount += self.amount
-        lender.update(balance: lender.balance + self.amount)
-        borrower.update(balance: borrower.balance - self.amount)
-        end
+      if borrower.balance - self.amount < 0
+        self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
+      else
+          if borrower.balance - self.amount >= 0
+            c.amount += self.amount
+            lender.update(balance: lender.balance + self.amount)
+            borrower.update(balance: borrower.balance - self.amount)
+          end
+      end
     end
     d.save
     c.save
@@ -56,7 +83,7 @@ class Transaction < ActiveRecord::Base
 end
 
 
-# def balances 
+# def balances
 #   friends.map do |friend|
 #     lended_amount = borrowers.where(borrower_id: friend.id).pluck(:amount).sum
 #     borrowed_amount = lenders.where(lender_id: friend.id).pluck(:amount).sum
