@@ -9,7 +9,7 @@
 <%=f.fields_for :add_friend_ids do |u|%>
   <!-- <%=select("add_friends", "relationship_type", @relationships.collect {|r| [ r.description ] }, { :include_blank => true })%> -->
 <%= u.fields_for :relationship_type do |relationship| %>
-<%= relationship.collection_select :description, @relationships, :id, :description,  include_blank: true %>
+<%= relationship.collection_select :drop_down, @relationships, :id, :description,  include_blank: true %>
 <%= relationship.label :description %>
 <%= relationship.text_field :description %>
 

@@ -156,16 +156,8 @@ def add_friend_ids=(attributes)
 attributes[:friend_ids].each do |attribute|
   if attribute != ""
    friend = User.find(attribute)
-
    create_this_transaction(self, friend.id, attributes[:transactions][:amount])
-   binding.pry
-
-   new_friendship = Friendship.find_or_create_by(user_id: self.id, friend_id: friend.id)
-  if attributes[:relationship_type] != ""
-      status = Relationship.find_or_create_by(description: attributes[:relationship_type][:description].strip)
-       new_friendship.update(relationship_id: status.id)
-   end
-
+   set_relationship_for_friendship(friend, attributes)
       if !self.friends.include?(friend)
         self.friends << friend
       end
@@ -176,6 +168,21 @@ end
 
 def relationship_type
   binding.pry
+end
+
+
+def set_relationship_for_friendship(friend, attributes)
+  @new_friendship = Friendship.find_or_create_by(user_id: self.id, friend_id: friend.id)
+ if attributes[:relationship_type][:description] != ""
+     status = Relationship.find_or_create_by(description: attributes[:relationship_type][:description].strip)
+      @new_friendship.update(relationship_id: status.id)
+ else
+   if attributes[:relationship_type][:drop_down] != ""
+       @new_friendship.update(relationship_id: attributes[:relationship_type][:drop_down])
+     else
+       @new_friendship.update(relationship_id: 1)
+   end
+  end
 end
 
 
@@ -196,7 +203,7 @@ end
 
 
 def create_this_transaction(current_user, friend, amount_params)
-  binding.pry 
+
   #transactions are optional in the add_friend form.  If the value comes back greater than 0. We are going to create a lending transaction.
   if amount_params != "" && amount_params != "0"
     @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend, amount: amount_params)
