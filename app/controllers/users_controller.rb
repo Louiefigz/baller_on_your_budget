@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_action :logged_in?
   before_action :authenticate_user!
-  before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance, :friend_relationship]
-  after_filter :flash_notice
+  before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance, :friend_relationship, :update_friends, :post_update_friends]
+  after_filter :flash_notice, only:[:parse_add_friend_form_data, :show, :add_friends]
 
   def flash_notice
     if !@user.flash_notice.blank?
@@ -52,11 +52,17 @@ class UsersController < ApplicationController
   def add_friends
     @relationships = Relationship.all
     @user = current_user
-    @minus_current_friends = User.where.not(id: current_user.friend_ids)
+
+    @minus_current_friends = User.where.not(id: current_user.friend_ids) && User.where.not(id: current_user.id)
   end
 
   def update_friends
+    @minus_current_friends = User.where(id: current_user.friend_ids)
+  end
 
+  def post_update_friends
+    @user.update(update_friends_params)
+    redirect_to root_path(@user)
   end
 
   def friend_relationship
@@ -104,6 +110,10 @@ private
 
   def user_params
     params.require(:user).permit(:add_friend_ids=>[:relationship_type=>[:description, :drop_down], :friend_ids=>[], :transactions=>[:amount]])
+  end
+
+  def update_friends_params
+    params.require(:user).permit(:friend_ids=>[])
   end
 
 end

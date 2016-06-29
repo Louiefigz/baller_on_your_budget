@@ -1,0 +1,6 @@
+<h2>These are your friends. Uncheck the box to delete your current friendship. It's that simple!</h2>
+
+<%= form_for @user, :url => post_update_friends_path, :html => {:method => :post}  do |f|%>
+<%= f.collection_check_boxes :friend_ids, @minus_current_friends , :id, :name %>
+<%= f.submit "Delete Friendships"%>
+<%end %>

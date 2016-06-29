@@ -22,7 +22,10 @@ post '/users/:id/parse_add_friend_form_data', to: 'users#parse_add_friend_form_d
   post '/users/:id/edit_balance', to: 'users#update_balance',  as:'update_balance'
 
   get '/users/:id/add_friends', to: 'users#add_friends', as:'add_friends'
-  post '/users/:id/add_friends', to: 'users#update_friends', as:'update_friends'
+
+  get '/users/:id/update_friends', to: 'users#update_friends', as: 'update_friends'
+  post '/users/:id/post_update_friends', to: 'users#post_update_friends', as: 'post_update_friends'
+  # post '/users/:id/add_friends', to: 'users#update_friends', as:'update_friends'
 
   get '/users/:id/friend_relationship/:id', to: 'users#friend_relationship', as:'friend_relationship'
 

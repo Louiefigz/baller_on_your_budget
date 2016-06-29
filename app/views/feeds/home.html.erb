@@ -12,6 +12,8 @@
 <% end %>
 </ul>
 
+<%= link_to 'Delete Friends', update_friends_path(:id=>current_user.id) %>
+
 <h3> Add your friends here</h3>
 <%= link_to "Add Friends", add_friends_path(:id=>current_user.id) %>
 
@@ -20,7 +22,7 @@
 
   <% if @biggest != nil %>
  <% @biggest.each do |transaction| %>
-  <li><%= transaction.lender.name %> lent <%= transaction.amount%> to <%= transaction.borrower.name%></li> 
+  <li><%= transaction.lender.name %> lent <%= transaction.amount%> to <%= transaction.borrower.name%></li>
    <% end %>
    <% end %>
 </ul>
