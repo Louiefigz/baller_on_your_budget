@@ -12,6 +12,7 @@ class TransactionsController < ApplicationController
 
 
   def index
+    binding.pry
      @transactions = Transaction.all
     render json: @transactions
   end
@@ -25,13 +26,16 @@ class TransactionsController < ApplicationController
     # @transaction.update(borrower_id: current_user.id)
     @transaction.borrower_id = current_user.id
     @transaction.error_message_check
-    if @transaction.flash_notice.blank?
-      @transaction.save
-      redirect_to user_path(current_user), flash[:notice] => "Well it seems like she isn't eating for a few weeks"
-    else
-      # raise
-      flash[:message] = @transaction.errors.full_messages[0]
-      redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+
+      if @transaction.flash_notice.blank?
+          if @transaction.save
+          redirect_to user_path(current_user)
+        else
+          flash[:message] = @transaction.errors.full_messages[0]
+          redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
+        end
+      else
+        redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
     end
   end
 

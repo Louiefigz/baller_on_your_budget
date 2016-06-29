@@ -52,7 +52,6 @@ class UsersController < ApplicationController
   def add_friends
     @relationships = Relationship.all
     @user = current_user
-
     @minus_current_friends = User.where.not(id: current_user.friend_ids) && User.where.not(id: current_user.id)
   end
 
