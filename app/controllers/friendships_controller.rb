@@ -17,9 +17,10 @@ class FriendshipsController < ApplicationController
   end
 
   def show
-    # @transaction = Transaction.new
+    @transaction = Transaction.new
     # @user_redirect = User.find(params[:user_id])
-    @user = User.find(params[:user_id])
+
+    @user = User.find(params[:id])
     #   @user = @user_redirect.friends.find(params[:id])
   end
 

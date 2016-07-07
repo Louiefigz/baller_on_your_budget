@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :logged_in?
   before_action :authenticate_user!
-  before_action :set_user, only: [:show, :edit, :edit_balance, :update_balance, :friend_relationship, :update_friends, :post_update_friends]
+  before_action :set_user, only: [:show,  :edit, :edit_balance, :update_balance, :friend_relationship, :update_friends, :post_update_friends]
   after_filter :flash_notice, only:[:parse_add_friend_form_data, :show, :add_friends]
 
   def flash_notice
@@ -12,13 +12,13 @@ class UsersController < ApplicationController
 
 
 
-  def self.new_with_session(params, session)
-    super.tap do |user|
-      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
-        user.email = data["email"] if user.email.blank?
-      end
-    end
-  end
+  # def self.new_with_session(params, session)
+  #   super.tap do |user|
+  #     if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
+  #       user.email = data["email"] if user.email.blank?
+  #     end
+  #   end
+  # end
 
   def index
     @users = User.all
@@ -52,7 +52,8 @@ class UsersController < ApplicationController
   def add_friends
     @relationships = Relationship.all
     @user = current_user
-    @minus_current_friends = User.where.not(id: current_user.friend_ids) && User.where.not(id: current_user.id)
+  
+    @minus_current_friends = User.where.not(id: current_user.friend_ids) & User.where.not(id: current_user.id)
   end
 
   def update_friends
@@ -70,6 +71,7 @@ class UsersController < ApplicationController
   end
 
   def show
+
     @transaction = Transaction.new
     @friends = @user.friends
     @user.return_json
@@ -88,6 +90,7 @@ class UsersController < ApplicationController
 # This controller route just manipulates the data from the Add_friend form since it is extensive.
 # It is used as a POST request.
   def parse_add_friend_form_data
+
     @user = User.find(params[:id])
     @user.update(user_params)
     if !@user.flash_notice.blank?

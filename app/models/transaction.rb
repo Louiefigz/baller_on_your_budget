@@ -11,16 +11,17 @@ class Transaction < ActiveRecord::Base
 
   attr_accessor :flash_notice
 
-
+  validate :error_message_check
   after_create :update_debit_credit
 
 
   def error_message_check
     lender = User.find(self.lender_id)
     borrower = User.find(self.borrower_id)
+    
     if self.lending
       if lender.balance - self.amount < 0
-        self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
+        errors.add(:amount, "Transaction could not be completed because there is not enough money in the account")
       end
     else
         if borrower.balance - self.amount < 0
