@@ -2,12 +2,12 @@
 <h2>Adding new friends</h2>
 
 
-<%= form_for @user, :url => parse_form_data_path, :html => {:method => :post} do |f| %>
+<%= form_for @user, :url => user_path, :html => {:method => :patch} do |f| %>
 
 <h4>How close are you to these people?  Use the drop down box or create a unique relationship</h4>
 
 <%=f.fields_for :add_friend_ids do |u|%>
-  
+
 <%= u.fields_for :relationship_type do |relationship| %>
 <%= relationship.collection_select :drop_down, @relationships, :id, :description,  include_blank: true %>
 <%= relationship.label :description %>

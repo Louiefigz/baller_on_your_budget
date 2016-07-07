@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :logged_in?
   before_action :authenticate_user!
   before_action :set_user, only: [:show,  :edit, :edit_balance, :update_balance, :friend_relationship, :update_friends, :post_update_friends]
-  after_filter :flash_notice, only:[:parse_add_friend_form_data, :show, :add_friends]
+  after_filter :flash_notice, only:[:parse_add_friend_form_data, :update, :show, :add_friends]
 
   def flash_notice
     if !@user.flash_notice.blank?
@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   def add_friends
     @relationships = Relationship.all
     @user = current_user
-  
+
     @minus_current_friends = User.where.not(id: current_user.friend_ids) & User.where.not(id: current_user.id)
   end
 
@@ -83,23 +83,33 @@ class UsersController < ApplicationController
   end
 
   def update
-
-  end
-
-
-# This controller route just manipulates the data from the Add_friend form since it is extensive.
-# It is used as a POST request.
-  def parse_add_friend_form_data
-
     @user = User.find(params[:id])
-    @user.update(user_params)
+
+     @user.update(user_params)
+    @check_friends = @user.friend_ids
     if !@user.flash_notice.blank?
       redirect_to (:back)
     else
       flash[:message] = "Added Friends Successfully"
       redirect_to root_path
     end
+
   end
+
+
+# This controller route just manipulates the data from the Add_friend form since it is extensive.
+# It is used as a POST request.
+  # def parse_add_friend_form_data
+  #
+  #   @user = User.find(params[:id])
+  #   @user.update(user_params)
+  #   if !@user.flash_notice.blank?
+  #     redirect_to (:back)
+  #   else
+  #     flash[:message] = "Added Friends Successfully"
+  #     redirect_to root_path
+  #   end
+  # end
 
 
 

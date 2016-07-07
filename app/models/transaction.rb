@@ -18,14 +18,14 @@ class Transaction < ActiveRecord::Base
   def error_message_check
     lender = User.find(self.lender_id)
     borrower = User.find(self.borrower_id)
-    
+
     if self.lending
       if lender.balance - self.amount < 0
         errors.add(:amount, "Transaction could not be completed because there is not enough money in the account")
       end
     else
         if borrower.balance - self.amount < 0
-          self.flash_notice = "Transaction could not be completed because there is not enough money in the account"
+          errors.add(:amount, "Transaction could not be completed because there is not enough money in the account")
         end
       end
   end
@@ -57,29 +57,5 @@ class Transaction < ActiveRecord::Base
   end
 
 
-  def create_this_transaction(current_user, friend, amount_params)
-    if amount_params != ""
-      @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend.to_i, amount: amount_params)
-
-      if @transaction.save
-      else
-        flash[:message] = @transaction.errors.full_messages[0]
-        redirect_to user_friendship_path(current_user.id, params[:transaction][:lender_id])
-      end
-    end
-
-  end
-
 
 end
-
-
-# def balances
-#   friends.map do |friend|
-#     lended_amount = borrowers.where(borrower_id: friend.id).pluck(:amount).sum
-#     borrowed_amount = lenders.where(lender_id: friend.id).pluck(:amount).sum
-#
-#     lended_amount - borrowed_amount
-#
-#   end
-# end

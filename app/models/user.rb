@@ -178,6 +178,7 @@ def create_this_transaction(current_user, friend, amount_params)
   #transactions are optional in the add_friend form.  If the value comes back greater than 0. We are going to create a lending transaction.
   if amount_params != "" && amount_params != "0"
     @transaction = Transaction.new(lender_id: current_user.id, borrower_id: friend, amount: amount_params)
+  
     if @transaction.save
     else
       self.flash_notice = @transaction.errors.full_messages[0]
