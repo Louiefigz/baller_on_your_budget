@@ -25,8 +25,8 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new(trans_params)
     # @transaction.update(borrower_id: current_user.id)
     @transaction.borrower_id = current_user.id
-    @transaction.error_message_check
-    
+    # @transaction.error_message_check
+
       if @transaction.flash_notice.blank?
           if @transaction.save
           redirect_to user_path(current_user)
